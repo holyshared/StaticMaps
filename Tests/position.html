@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title></title>
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<script type="text/javascript" src="../Demos/js/libraries/mootools-core-1.3.js"></script>
+		<script type="text/javascript" src="../Source/StaticMap.js"></script>
+		<script type="text/javascript" src="../Source/StaticMap.Query.js"></script>
+		<script type="text/javascript" src="../Source/StaticMap.Query.Position.js"></script>
+		<script type="text/javascript">
+			(function($){
+			
+				var t1Options = { center: {lat: 40.714728, lng: -73.998672}, zoom: 15 }
+				var t1 = new StaticMap.Query.Position(t1Options);
+				if (!t1.validate()) {
+					console.log('testcase-1 error');
+				}
+
+				var t2Options = { center: 'Berkeley,CA', zoom: 15 };
+				var t2 = new StaticMap.Query.Position(t2Options);
+				if (!t2.validate()) {
+					console.log('testcase-2 error');
+				}
+
+				var t3Options = { center: 'Berkeley,CA', zoom: -1}
+
+				var t3 = new StaticMap.Query.Position(t3Options);
+				if (t3.validate()) {
+					console.log('testcase-3 error');
+				}
+
+				var t4Options = { center: 'Berkeley,CA', zoom: 22 };
+				var t4 = new StaticMap.Query.Position(t4Options);
+				if (t4.validate()) {
+					console.log('testcase-4 error');
+				}
+
+				var t5Options = { center: '', zoom: 15 };
+				var t5 = new StaticMap.Query.Position(t5Options);
+				if (t5.validate()) {
+					console.log('testcase-5 error');
+				}
+
+				var t6Options = { center: {lat: 'hoge'}, zoom: 15 };
+				var t6 = new StaticMap.Query.Position(t6Options);
+				if (t6.validate()) {
+					console.log('testcase-6 error');
+				}
+
+				var t7Options = { center: 'Berkeley,CA', zoom: 15 };
+				var t7 = new StaticMap.Query.Position(t7Options);
+				if (t7.toQueryString() != 'center=Berkeley%2CCA&zoom=15') {
+					console.log('testcase-7 error = ' + t7.toQueryString());
+				}
+
+				var t8Options = { center: {lat: 40.714728, lng: -73.998672}, zoom: 15 };
+				var t8 = new StaticMap.Query.Position(t8Options);
+				if (t8.toQueryString() != 'center=40.714728%2C-73.998672&zoom=15') {
+					console.log('testcase-8 error = ' + t8.toQueryString());
+				}
+
+				var t9 = new StaticMap.Query.Position();
+				t9.set('center', {lat: 40.714728, lng: -73.998672});
+				t9.set('zoom', 15);
+				if (t9.toQueryString() != 'center=40.714728%2C-73.998672&zoom=15') {
+					console.log('testcase-9 error = ' + t9.toQueryString());
+				}
+
+
+
+			}(document.id));
+		</script>
+	</head>
+	<body>
+
+
+
+	</body>
+</html>

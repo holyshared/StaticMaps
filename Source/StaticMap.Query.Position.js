@@ -18,33 +18,40 @@ StaticMap.Query.Position = new Class({
 
 	validate: function(){
 		var options = this.options;
-		if (typeOf(options.lat) != 'float'
-		|| typeOf(options.lng) != 'float' ) {
-			return false;
-		},
 
-		if (typeOf(options.zoom) != 'number'
-		|| typeOf(options.zoom < 0 && options.zoom > 21)) {
+		if (typeOf(options.center) == 'object') {
+			if (typeOf(options.center.lat) != 'number'
+			|| typeOf(options.center.lng) != 'number' ) {
+				return false;
+			};
+		} else {
+			if (typeOf(options.center) != 'string'
+			|| options.center == '') {
+				return false;
+			};
+		};
+
+		if ((typeOf(options.zoom) != 'number')
+		|| (options.zoom < 0 || options.zoom > 21)) {
 			return false;
-		}
+		};
 		return true;
 	},
 
-
 	toQueryString: function(){
-		var query = [], value = null, options = this.options;
+		var query = {}, value = null, options = this.options;
 		for (var key in options) {
 			value = options[key];
-			select (key) {
+			switch(key) {
 				case 'center':
-					query['center'] = value.lat + ',' + value.lng;
+					query[key] = (typeOf(value) == 'object') ? value.lat + ',' + value.lng : value;
 					break;
 				case 'zoom':
-					query['zoom'] = value.zoom;
+					query[key] = value;
 					break;
 			}
 		}
-		reuturn query.join("&");
+		return Object.toQueryString(query);
 	}
 
 })

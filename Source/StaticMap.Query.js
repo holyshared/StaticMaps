@@ -1,7 +1,6 @@
 (function($){
 
 var StaticMap = (this.StaticMap || {});
-
 StaticMap.Query = new Class({
 
 	Implements: [Options],
@@ -14,7 +13,7 @@ StaticMap.Query = new Class({
 	},
 
 	set: function(key, value){
-		if (!this.options[key]) {
+		if (Object.keyOf(this.options, key) == false) {
 			return false;
 		}
 		this.options[key] = value;
