@@ -3,6 +3,8 @@
 var StaticMap = (this.StaticMap || {});
 StaticMap.Query = (this.StaticMap.Query || {});
 
+StaticMap.registerQuery('position', 'Query.Position');
+
 StaticMap.Query.Position = new Class({
 
 	Extends: StaticMap.Query,
