@@ -1,0 +1,58 @@
+# Static Map
+
+## StaticMap.Markers
+* getMarker()
+* setSize()
+* setColor()
+* setLabel()
+* addMarker(object)
+
+### StaticMap.Markers.Marker
+* setSize()
+* setColor()
+* setLabel()
+* setPoint(string|latlng)
+
+var map = new StaticMap();
+map.addMarker({
+	color: red,
+	label: 'A',
+	point: {lat:aaa, lng:aaa}
+});
+
+map.addMarker({ label: 'B', point: {lat:aaa, lng:aaa} });
+map.addMarker({ label: 'C', point: {lat:aaa, lng:aaa} });
+map.addMarker({ label: 'D', point: {lat:aaa, lng:aaa} });
+map.toQueryString();
+
+var marker1 = StaticMap.factory('marker');
+marker.setSize().setColor().setLabel();
+map.addMarker(marker1);
+
+var marker2 = StaticMap.factory('marker');
+marker2.setSize().setColor().setLabel();
+map.addMarker(marker2);
+
+StaticMap.Marker.setSize()
+	.setColor()
+	.setLable();
+
+StaticMap.Marker.set({
+	color: "aaa"
+	label: "aaa"
+	point: "aaa"
+});
+
+StaticMap.set('marker', {
+	color: "aaa"
+	label: "aaa"
+	point: "aaa"
+});
+
+
+
+## Path
+* setWeight()
+* setColor()
+* setFillColor()
+* addPoint(string|latlng)
