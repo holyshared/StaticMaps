@@ -1,3 +1,32 @@
+/*
+---
+name: StaticMap.Marker
+
+description: 
+
+license: MIT-style
+
+authors:
+- Noritaka Horio
+
+requires:
+  - Core/Core
+  - Core/Array
+  - Core/String
+  - Core/Number
+  - Core/Function
+  - Core/Object
+  - Core/Event
+  - Core/Browser
+  - Core/Class
+  - Core/Class.Extras
+  - Core/Element
+  - StaticMap
+
+provides: [StaticMap.Marker]
+...
+*/
+
 (function($){
 
 var StaticMap = (this.StaticMap || {});
@@ -7,11 +36,10 @@ StaticMap.implement({
 	markers: [],
 
 	addMarker: function(marker){
-		var keyValues = marker;
-		if (instanceOf(marker, StaticMap.Marker)) {
-			keyValues = marker.toObject();
+		if (!instanceOf(marker, StaticMap.Marker)) {
+			marker = new StaticMap.Marker(marker);
 		}
-		this['markers'].push(keyValues);
+		this['markers'].push(marker);
 	}
 
 });
@@ -103,14 +131,47 @@ StaticMap.Marker = new Class({
 	},
 
 	toObject: function() {
-		return this.props;
+		var object = {};
+		for (var key in this.props) {
+			value = this.props[key];
+			if (value == null && value == undefined) continue;
+			object[key] = value;
+		}
+		return object;
+	},
+
+	toQueryString: function() {
+		var query = [];
+		for (var key in this.props) {
+			value = this.props[key];
+			if (value == null && value == undefined) continue;
+			switch(key) {
+				case 'color':
+				case 'label':
+				case 'size':
+					query.push(key + ':' + value);
+					break;
+				case 'point':
+					if (typeOf(value) == 'string') {
+						query.push(value);
+					} else {
+						query.push(value.lat + ',' + value.lng);
+					}
+					break;
+			}
+		}
+		return query.join('|');
 	}
 
 });
 
+//Size of marker
 StaticMap.Marker.sizes = ['tiny', 'mid', 'small']; 
+
+//Color of marker
 StaticMap.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white']; 
 
+//Method of factory of generating marker
 StaticMap.Marker.factory = function(props) {
 	if (typeOf(props) == 'object') new TypeError('The property of the marker is not an object.');
 	var properties = Object.subset(props, ['color', 'size', 'label', 'point']);
@@ -119,31 +180,30 @@ StaticMap.Marker.factory = function(props) {
 			delete properties[key];
 		}
 	}
-console.log(properties);
 	var marker = new StaticMap.Marker(properties);
 	return marker;
 };
 
+//Method of class of converting two or more markers into url query.
 StaticMap.Marker.toQueryString = function(markers) {
-	var color = label = size = null;
+	var query = [], markerQuery = [];
+	var marker = markers.shift();
+
+	markerQuery.push(marker.toQueryString());
 	for (var i = 0; i < markers.length; i++) {
-		var marker = markers[i];
-		for (var key in marker) {
-			var value = marker[key];
-			switch(key) {
-				case 'color': color = (value) ? value : color; break;
-				case 'label': label = (value) ? value : label; break;
-				case 'size': size = (value) ? value : size; break;
-				case 'point':
-					if (typeOf(value) == 'string') {
-						a.push(value);
-					} else {
-						a.push(value.lat + ',' + value.lng);
-					}
-					break;
-			}
+		marker = markers[i];
+		if (marker.getColor() || marker.getLabel() || marker.getSize()) {
+			query.push('markers=' + markerQuery.join('|'));
+			markerQuery = [];
 		}
+		markerQuery.push(marker.toQueryString());
 	}
+	query.push('markers=' + markerQuery.join('|'));
+	return query.join('&amp;');
 };
+
+//It registers in the [kueri] conversion processing of StaticMap.
+//When the toQueryString method of StaticMap is called, this method is executed.
+StaticMap.Querys.registerQuery('markers', StaticMap.Marker.toQueryString);
 
 }(document.id));

@@ -1,7 +1,9 @@
 (function($){
 
+
+
+
 	var map = new StaticMap();
-	map.addMarker({ color: 'red', size: 'mid', label: 'A', point: { lat: 37, lng: 138 } });
 
 	//Size
 	var marker = null;
@@ -60,5 +62,21 @@
 	} catch (e) {
 		console.log(e);
 	}
+
+	//QueryString
+	map.addMarker({ color: 'red', size: 'mid', label: 'A', point: { lat: 37, lng: 138 } });
+
+	marker = map.factory('marker', { label: 'B', point: 'Tokyo Operacity' });
+	map.addMarker(marker);
+
+	marker = map.factory('marker', { label: 'C', point: { lat: 40, lng: 138 } });
+	map.addMarker(marker);
+
+	var testURL = 'http://maps.google.com/maps/api/staticmap?markers=color:red|size:mid|label:A|37,138&amp;markers=label:B|Tokyo Operacity&amp;markers=label:C|40,138';
+	var url = map.toQueryString();
+	if (url == testURL) {
+		alert('ok');
+	}
+
 
 }(document.id));
