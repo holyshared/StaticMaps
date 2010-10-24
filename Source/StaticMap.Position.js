@@ -33,6 +33,13 @@ var StaticMap = (this.StaticMap || {});
 
 StaticMap.implement({
 
+	options: {
+		positions: {
+			center: null,
+			zoom: null
+		}
+	},
+
 	positions: {
 		center: null,
 		zoom: null
@@ -88,7 +95,7 @@ StaticMap.Position.toQueryString = function(positions) {
 	if (center) {
 		switch(typeOf(center)) {
 			case 'string':
-				query.push('center=' + center);
+				query.push('center=' + encodeURIComponent(center));
 				break;
 			case 'object':
 				query.push('center=' + center.lat + ',' + center.lng);

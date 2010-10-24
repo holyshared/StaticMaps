@@ -34,6 +34,19 @@ var StaticMap = (this.StaticMap || {});
 
 StaticMap.implement({
 
+	options: {
+		map: {
+			size: {
+				width: 600,
+				height: 600
+			},
+			format: null,
+			maptype: null,
+			mobile: null,
+			language: null
+		}
+	},
+
 	map: {
 		size: null,
 		format: null,

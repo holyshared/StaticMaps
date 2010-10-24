@@ -1,82 +1,92 @@
 (function($){
 
-
-
-
 	var map = new StaticMap();
 
-	//Size
-	var marker = null;
-	marker = map.factory('marker', { size: 'tiny', point: { lat: 40, lng: 138 } });
-	marker = map.factory('marker', { size: 'small',point: { lat: 40, lng: 138 } });
-	marker = map.factory('marker', { size: 'mid', point: { lat: 40, lng: 138 } });
-	try {
-		marker = map.factory('marker', { size: 'large', point: { lat: 40, lng: 138 } });
-	} catch (e) {
-		console.log(e);
-	}
+	map.setSize(600, 300);
 
-	//Color
-	marker = map.factory('marker', { color: 'red', size: 'mid', point: { lat: 40, lng: 138 } });
-	marker = map.factory('marker', { color: 'black', size: 'mid', point: { lat: 40, lng: 138 } });
-	marker = map.factory('marker', { color: 'blue', size: 'mid', point: { lat: 40, lng: 138 } });
-	marker = map.factory('marker', { color: '0x000000', size: 'mid', point: { lat: 40, lng: 138 } });
-	marker = map.factory('marker', { color: '0xFF0000', size: 'mid', point: { lat: 40, lng: 138 } });
-	try {
-		marker = map.factory('marker', { color: '00', size: 'mid', point: { lat: 40, lng: 138 } });
-	} catch (e) {
-		console.log(e);
-	}
+	var marker = map.factory('marker', { size: 'tiny', point: { lat: 40, lng: 138 } });
+	var size = Function.attempt(function(){
+		marker.setSize('large');
+		return false;
+	}, function(){
+		marker.setSize(null);
+		return false;
+	}, function(){
+		marker.setSize('mid');
+		var size = marker.getSize();
+		return (size == 'mid');
+	});
+	(size) ? console.log('size getter/setter success') : console.log('size getter/setter failure');
 
-	//Label
-	marker = map.factory('marker', { label: 'A', point: { lat: 40, lng: 138 } });
-	marker = map.factory('marker', { label: 'Z', point: { lat: 40, lng: 138 } });
-	marker = map.factory('marker', { label: '0', point: { lat: 40, lng: 138 } });
-	marker = map.factory('marker', { label: '9', point: { lat: 40, lng: 138 } });
-	try {
-		marker = map.factory('marker', { label: 'foo', point: { lat: 40, lng: 138 } });
-	} catch (e) {
-		console.log(e);
-	}
-	try {
-		marker = map.factory('marker', { label: 'FOO', point: { lat: 40, lng: 138 } });
-	} catch (e) {
-		console.log(e);
-	}
-	try {
-		marker = map.factory('marker', { label: '0000', point: { lat: 40, lng: 138 } });
-	} catch (e) {
-		console.log(e);
-	}
+	var color1 = Function.attempt(function(){
+		marker.setColor('00');
+		return false;
+	}, function(){
+		marker.setColor(null);
+		return false;
+	}, function(){
+		marker.setColor('0x000000');
+		var color = marker.getColor();
+		return (color == '0x000000');
+	});
+	(color1) ? console.log('color1 getter/setter success') : console.log('color1 getter/setter failure');
 
-	//Point
-	marker = map.factory('marker', { point: 'Tokyo Operacity' });
-	marker = map.factory('marker', { point: { lat: 40, lng: 138 } });
-	try {
-		marker = map.factory('marker', { point: null });
-	} catch (e) {
-		console.log(e);
-	}
-	try {
-		marker = map.factory('marker', { point: { lat: 'foo', lng: 'bar' } });
-	} catch (e) {
-		console.log(e);
-	}
+	var color2 = Function.attempt(function(){
+		marker.setColor('black');
+		var color = marker.getColor();
+		return (color == 'black');
+	});
+	(color2) ? console.log('color2 getter/setter success') : console.log('color2 getter/setter failure');
+
+
+
+	var label = Function.attempt(function(){
+		marker.setLabel('00');
+		return false;
+	}, function(){
+		marker.setLabel(null);
+		return false;
+	}, function(){
+		marker.setLabel('AA');
+		return false;
+	}, function(){
+		marker.setLabel('T');
+		var label = marker.getLabel();
+		return (label == 'T');
+	});
+	(label) ? console.log('label getter/setter success') : console.log('label getter/setter failure');
+
+
+	var point1 = Function.attempt(function(){
+		marker.setPoint('');
+		return false;
+	}, function(){
+		marker.setPoint(null);
+		return false;
+	}, function(){
+		marker.setPoint({ lat: 40, lng: 138 });
+		var point = marker.getPoint();
+		return (point.lat == 40 && point.lng == 138);
+	});
+	(point1) ? console.log('point1 getter/setter success') : console.log('point1 getter/setter failure');
+
+
+	var point2 = Function.attempt(function(){
+		marker = marker.setPoint('Williamsburg,Brooklyn,NY');
+		var point = marker.getPoint();
+		return (point == 'Williamsburg,Brooklyn,NY');
+	});
+	(point2) ? console.log('point2 getter/setter success') : console.log('point2 getter/setter failure');
 
 	//QueryString
-	map.addMarker({ color: 'red', size: 'mid', label: 'A', point: { lat: 37, lng: 138 } });
-
-	marker = map.factory('marker', { label: 'B', point: 'Tokyo Operacity' });
 	map.addMarker(marker);
 
-	marker = map.factory('marker', { label: 'C', point: { lat: 40, lng: 138 } });
-	map.addMarker(marker);
-
-	var testURL = 'http://maps.google.com/maps/api/staticmap?markers=color:red|size:mid|label:A|37,138&amp;markers=label:B|Tokyo Operacity&amp;markers=label:C|40,138';
+	var testURL = 'http://maps.google.com/maps/api/staticmap?size=600x300&markers=color:black|size:mid|label:T|Williamsburg%2CBrooklyn%2CNY&sensor=false';
 	var url = map.toQueryString();
-	if (url == testURL) {
-		alert('ok');
-	}
+	(url == testURL) ? console.log('toQueryString getter/setter success') : console.log('toQueryString getter/setter failure');
 
+	window.addEvent('domready', function(){
+		map.renderTo($('staticMap'));
+	});
 
 }(document.id));

@@ -33,12 +33,18 @@ var StaticMap = this.StaticMap = new Class({
 
 	Implements: [Options],
 
+	options: {},
+
 	url: 'http://maps.google.com/maps/api/staticmap',
 
 	sensor: false,
 
 	initialize: function(options){
 		this.setOptions(options);
+		var op = this.options;
+		for (var key in op) {
+			this[key] = op[key];
+		}
 	},
 
 	setSensor: function(value) {

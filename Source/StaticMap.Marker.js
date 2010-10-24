@@ -22,6 +22,7 @@ requires:
   - Core/Class.Extras
   - Core/Element
   - StaticMap
+  - StaticMap.Map
 
 provides: [StaticMap.Marker]
 ...
@@ -32,6 +33,10 @@ provides: [StaticMap.Marker]
 var StaticMap = (this.StaticMap || {});
 
 StaticMap.implement({
+
+	options: {
+		markers: []
+	},
 
 	markers: [],
 
@@ -142,7 +147,10 @@ StaticMap.Marker = new Class({
 
 	toQueryString: function() {
 		var query = [];
-		for (var key in this.props) {
+		var orderKeys = StaticMap.Marker.orderKeys;
+		var l = StaticMap.Marker.orderKeys.length;
+		for (var i = 0; i < l; i++) {
+			key = orderKeys[i];
 			value = this.props[key];
 			if (value == null && value == undefined) continue;
 			switch(key) {
@@ -153,7 +161,7 @@ StaticMap.Marker = new Class({
 					break;
 				case 'point':
 					if (typeOf(value) == 'string') {
-						query.push(value);
+						query.push(encodeURIComponent(value));
 					} else {
 						query.push(value.lat + ',' + value.lng);
 					}
@@ -171,6 +179,8 @@ StaticMap.Marker.sizes = ['tiny', 'mid', 'small'];
 //Color of marker
 StaticMap.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white']; 
 
+StaticMap.Marker.orderKeys = ['color', 'size', 'label', 'point'];
+
 //Method of factory of generating marker
 StaticMap.Marker.factory = function(props) {
 	if (typeOf(props) == 'object') new TypeError('The property of the marker is not an object.');
@@ -187,11 +197,13 @@ StaticMap.Marker.factory = function(props) {
 //Method of class of converting two or more markers into url query.
 StaticMap.Marker.toQueryString = function(markers) {
 	var query = [], markerQuery = [];
-	var marker = markers.shift();
+
+	var markersCopys = Array.clone(markers);
+	var marker = markersCopys.shift();
 
 	markerQuery.push(marker.toQueryString());
-	for (var i = 0; i < markers.length; i++) {
-		marker = markers[i];
+	for (var i = 0; i < markersCopys.length; i++) {
+		marker = markersCopys[i];
 		if (marker.getColor() || marker.getLabel() || marker.getSize()) {
 			query.push('markers=' + markerQuery.join('|'));
 			markerQuery = [];
