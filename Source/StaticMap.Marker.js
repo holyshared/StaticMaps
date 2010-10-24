@@ -2,7 +2,7 @@
 ---
 name: StaticMap.Marker
 
-description: 
+description: The marker function is added to StaticMaps.
 
 license: MIT-style
 

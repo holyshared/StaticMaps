@@ -2,7 +2,7 @@
 ---
 name: StaticMap.Map
 
-description: 
+description: The setting of the map is added in StaticMaps and a revokable function is added.
 
 license: MIT-style
 

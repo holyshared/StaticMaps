@@ -2,7 +2,7 @@
 ---
 name: StaticMap.Position
 
-description: 
+description: The function to change the display setting of the map to StaticMaps is added.
 
 license: MIT-style
 
