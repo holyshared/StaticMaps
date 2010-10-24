@@ -199,7 +199,7 @@ StaticMap.Marker.toQueryString = function(markers) {
 		markerQuery.push(marker.toQueryString());
 	}
 	query.push('markers=' + markerQuery.join('|'));
-	return query.join('&amp;');
+	return query.join('&');
 };
 
 //It registers in the [kueri] conversion processing of StaticMap.

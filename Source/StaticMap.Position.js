@@ -99,7 +99,7 @@ StaticMap.Position.toQueryString = function(positions) {
 	if (positions.zoom) {
 		query.push('zoom=' + positions.zoom);
 	}
-	return query.join('&amp;');
+	return query.join('&');
 };
 
 //It registers in the query conversion processing of StaticMap.
