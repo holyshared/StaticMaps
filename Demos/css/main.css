@@ -20,7 +20,6 @@
 	width: 445px;
 	padding: 1px;
 	background: #ffffff;
-	opacity: 0.8;
 }
 
 #map:after {
@@ -32,6 +31,37 @@
 	display: block;
 	margin-top: -28px;
 	margin-left: 412px;
+}
+
+.head {
+	overflow: hidden;
+}
+
+h1 {
+	float: left;
+	width: 198px;
+}
+
+#nav {
+	padding-top: 20px;
+	float: left;
+	overflow: hidden;
+	list-style: none;
+	width: 338px;
+	margin-left: 20px;
+}
+
+#nav li {
+	font-size: 0.9em;
+	text-transform: uppercase;
+	float: left;
+	margin-left: 10px;
+}
+
+#nav li a {
+	padding: 5px 10px;
+	border: 1px solid #cccccc;
+	display: inline-block;
 }
 
 .desc {
