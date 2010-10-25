@@ -22,6 +22,7 @@ requires:
   - Core/Class.Extras
   - Core/Element
   - StaticMap
+  - StaticMap.Map
 
 provides: [StaticMap.Position]
 ...

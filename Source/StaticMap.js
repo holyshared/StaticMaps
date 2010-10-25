@@ -21,7 +21,6 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMap
 
 provides: [StaticMap, StaticMap.Querys]
 ...
