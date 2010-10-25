@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+@import "reset.css";
+
+body {
+	background: url(../images/bgi_body.gif) repeat-x left 20px;
+}
+
+h1 {
+	margin-bottom: 30px;
+}
+
+#warpper {
+	width: 940px;
+	margin: 20px auto 0px auto;
+}
+
+#container {
+	background: url(../images/bgi_paper.jpg) no-repeat left top;
+	width: 520px;
+	height: 335px;
+	margin: 0px auto;
+}
