@@ -73,3 +73,16 @@ h1 {
 .detailTo {
 	text-align: right;
 }
+
+
+
+.lightbox {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	margin-left: -50px;
+	margin-top: -50px;
+	left: 50%;
+	top: 50%;
+	-moz-box-shadow: 1px 1px 5px #cccccc;
+}
