@@ -21,8 +21,8 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMap
-  - StaticMap.Map
+  - StaticMap/StaticMap
+  - StaticMap/StaticMap.Map
 
 provides: [StaticMap.Position]
 ...

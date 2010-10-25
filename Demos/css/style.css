@@ -17,7 +17,26 @@ h1 {
 
 #container {
 	background: url(../images/bgi_paper.jpg) no-repeat left top;
+	padding-top: 38px;
 	width: 520px;
-	height: 335px;
+	height: 295px;
 	margin: 0px auto;
+}
+
+#map {
+	margin: 0px auto;
+	width: 445px;
+	padding: 1px;
+	background: #ffffff;
+}
+
+#map:after {
+	position: absolute;
+	content: '';
+	background: url(../images/img_turn_it_over.png) no-repeat left top;
+	width: 69px;
+	height: 78px;
+	display: block;
+	margin-top: -28px;
+	margin-left: 412px;
 }
