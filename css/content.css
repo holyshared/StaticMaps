@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+body {
+	background: url(../images/bgi_body.gif) repeat-x left 40px;
+}
+
+h1 {
+	margin-bottom: 30px;
+}
+
+h2 {
+	font-size: 2.4em;
+	font-weight: normal;
+	margin-bottom: 10px;
+}
