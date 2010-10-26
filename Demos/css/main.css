@@ -64,7 +64,7 @@ h1 {
 	display: inline-block;
 }
 
-.desc {
+.body {
 	border: 1px solid #cccccc;
 	padding: 15px 15px 0px 15px;
 	margin-bottom: 10px;
@@ -83,5 +83,6 @@ h1 {
 	left: 50%;
 	top: 50%;
 	padding: 10px;
+	z-index: 999999;
 	-moz-box-shadow: 1px 1px 5px #000000;
 }
