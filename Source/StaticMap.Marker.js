@@ -55,7 +55,8 @@ StaticMap.Marker = new Class({
 		color: null,
 		size: null,
 		label: null,
-		point: null
+		icon: null,
+		shadow: true
 	},
 
 	initialize: function(props){
@@ -119,20 +120,45 @@ StaticMap.Marker = new Class({
 		return this;
 	},
 
-	getColor: function(color) {
+	setIcon: function(url) {
+		if (typeOf(url) != 'string') throw new TypeError('The url is not a character string');
+		if (!url.test(/^(((ht|f)tp(s?))\:\/\/)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/)) {
+			throw new TypeError('It is not a format of url');
+		}
+		this.props['icon'] = url;
+		return this;
+	},
+
+	setShadow: function(value) {
+		if (typeOf(value) != 'boolean') {
+			throw new TypeError('The data type is not boolean');
+		}
+		this.props['shadow'] = value;
+		return this;
+	},
+
+	getColor: function() {
 		return this.props['color'];
 	},
 
-	getLabel: function(label) {
+	getLabel: function() {
 		return this.props['label'];
 	},
 
-	getSize: function(size) {
+	getSize: function() {
 		return this.props['size'];
 	},
 
-	getPoint: function(point) {
+	getPoint: function() {
 		return this.props['point'];
+	},
+
+	getIcon: function() {
+		return this.props['icon'];
+	},
+
+	getShadow: function() {
+		return this.props['shadow'];
 	},
 
 	toObject: function() {
@@ -154,17 +180,15 @@ StaticMap.Marker = new Class({
 			value = this.props[key];
 			if (value == null && value == undefined) continue;
 			switch(key) {
-				case 'color':
-				case 'label':
-				case 'size':
-					query.push(key + ':' + value);
-					break;
 				case 'point':
 					if (typeOf(value) == 'string') {
 						query.push(encodeURIComponent(value));
 					} else {
 						query.push(value.lat + ',' + value.lng);
 					}
+					break;
+				default:
+					query.push(key + ':' + value);
 					break;
 			}
 		}
@@ -179,7 +203,7 @@ StaticMap.Marker.sizes = ['tiny', 'mid', 'small'];
 //Color of marker
 StaticMap.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white']; 
 
-StaticMap.Marker.orderKeys = ['color', 'size', 'label', 'point'];
+StaticMap.Marker.orderKeys = ['color', 'size', 'label', 'icon', 'shadow', 'point'];
 
 //Method of factory of generating marker
 StaticMap.Marker.factory = function(props) {
