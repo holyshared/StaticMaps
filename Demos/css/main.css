@@ -4,6 +4,7 @@
 	width: 560px;
 	margin: 20px auto 0px auto;
 	text-align: left;
+	z-index: 0;
 }
 
 #container {
@@ -37,10 +38,17 @@
 	overflow: hidden;
 }
 
-h1 {
+.head h1 {
 	float: left;
 	width: 198px;
 }
+
+.body {
+	border: 1px solid #cccccc;
+	padding: 15px 15px 0px 15px;
+	margin-bottom: 10px;
+}
+
 
 #nav {
 	padding-top: 20px;
@@ -64,11 +72,6 @@ h1 {
 	display: inline-block;
 }
 
-.body {
-	border: 1px solid #cccccc;
-	padding: 15px 15px 0px 15px;
-	margin-bottom: 10px;
-}
 
 .detailTo {
 	text-align: right;
@@ -84,5 +87,9 @@ h1 {
 	top: 50%;
 	padding: 10px;
 	z-index: 999999;
+	border: 1px solid #cccccc;
+	background: #ffffff;
 	-moz-box-shadow: 1px 1px 5px #000000;
+	-webkit-box-shadow: 1px 1px 5px #000000;
+	box-shadow: 1px 1px 5px #000000;
 }
