@@ -187,6 +187,15 @@ StaticMap.Marker = new Class({
 						query.push(value.lat + ',' + value.lng);
 					}
 					break;
+				case 'icon':
+					var position = value.indexOf('?');
+					if (position >= 0) {
+						var f = value.substr(0, position);
+						var b = value.substr(position + 1);
+						value = f + '?' + encodeURIComponent(b);
+					}
+					query.push(key + ':' + value);
+					break;
 				default:
 					query.push(key + ':' + value);
 					break;

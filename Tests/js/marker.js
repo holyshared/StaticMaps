@@ -105,7 +105,6 @@
 	});
 	(shadow) ? console.log('shadow getter/setter success') : console.log('shadow getter/setter failure');
 
-
 	//QueryString
 	map.addMarker(marker);
 
@@ -113,8 +112,16 @@
 	var url = map.toQueryString();
 	(url == testURL) ? console.log('toQueryString success') : console.log('toQueryString failure');
 
+	var map2 = new StaticMap();
+	map2.setSize(600, 300).setZoom(15);
+	map2.addMarker({
+		icon: 'http://bit.ly/9JtCio',
+		shadow: false,
+		point: 'Williamsburg,Brooklyn,NY'
+	});
+
 	window.addEvent('domready', function(){
-		map.renderTo($('staticMap'));
+		map2.renderTo($('staticMap'));
 	});
 
 }(document.id));
