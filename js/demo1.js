@@ -11,7 +11,8 @@ window.addEvent('domready', function(){
 
 	var marker = map.factory('marker', {
 		point: point,
-		label: 'H'
+		label: 'H',
+		icon: 'http://holyshared.github.com/StaticMaps/images/img_marker1.png'
 	});
 	map.addMarker(marker);
 	map.renderTo($('map'));
