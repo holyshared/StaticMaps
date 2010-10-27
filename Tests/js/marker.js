@@ -115,7 +115,7 @@
 	var map2 = new StaticMap();
 	map2.setSize(600, 300).setZoom(15);
 	map2.addMarker({
-		icon: 'http://bit.ly/9JtCio',
+		icon: 'http://holyshared.github.com/StaticMaps/images/img_marker1.png',
 		shadow: false,
 		point: 'Williamsburg,Brooklyn,NY'
 	});
