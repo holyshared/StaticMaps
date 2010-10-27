@@ -621,7 +621,7 @@ StaticMap.Marker.orderKeys = ['color', 'size', 'label', 'icon', 'shadow', 'point
 //Method of factory of generating marker
 StaticMap.Marker.factory = function(props) {
 	if (typeOf(props) == 'object') new TypeError('The property of the marker is not an object.');
-	var properties = Object.subset(props, ['color', 'size', 'label', 'point']);
+	var properties = Object.subset(props, ['color', 'size', 'label', 'icon', 'shadow', 'point']);
 	for (var key in properties) {
 		if (properties[key] == undefined) {
 			delete properties[key];
