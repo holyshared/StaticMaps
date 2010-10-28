@@ -198,6 +198,8 @@ StaticMaps.Marker.factory = function(props) {
 StaticMaps.Marker.toQueryString = function(markers) {
 	var query = [], markerQuery = [];
 
+	if (markers.length <= 0) return '';
+
 	var markersCopys = Array.clone(markers);
 	var marker = markersCopys.shift();
 
