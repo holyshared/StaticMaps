@@ -14,7 +14,7 @@
 
 		initialize: function() {
 			var point = '原美術館';
-			this.map = new StaticMap({
+			this.map = new StaticMaps({
 				map: { size: { width: 400, height: 200 } },
 				positions: {
 					center: point,

@@ -4,7 +4,7 @@ window.addEvent('domready', function(){
 
 	var point = '原美術館';
 
-	var map = new StaticMap();
+	var map = new StaticMaps();
 	map.setSize(445, 245)
 		.setCenter(point)
 		.setZoom(16);
