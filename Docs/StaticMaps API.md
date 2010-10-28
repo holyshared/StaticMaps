@@ -1,10 +1,10 @@
 StaticMaps
 ============
 
-StaticMap API Document
+StaticMaps API Document
 --------------------------
 
-### StaticMap
+### StaticMaps
 
 * setSensor
 * getSensor
@@ -14,9 +14,9 @@ StaticMap API Document
 
 #### Function concerning position. 
 
-It is possible to use it by adding *StaticMap.Position*. 
+It is possible to use it by adding *StaticMaps.Position*. 
 
-##### StaticMap.Position
+##### StaticMaps.Position
 
 * setCenter
 * setZoomt
@@ -26,9 +26,9 @@ It is possible to use it by adding *StaticMap.Position*.
 
 #### Function concerning map.
  
-It is possible to use it by adding *StaticMap.Map*.
+It is possible to use it by adding *StaticMaps.Map*.
 
-##### StaticMap.Map
+##### StaticMaps.Map
 
 * setSize
 * setFormat
@@ -44,26 +44,26 @@ It is possible to use it by adding *StaticMap.Map*.
 
 #### Function concerning marker.
  
-It is possible to use it by adding *StaticMap.Marker*.
+It is possible to use it by adding *StaticMaps.Marker*.
 
-##### StaticMap.Marker
+##### StaticMaps.Marker
 
 * addMarker 
 
-### StaticMap.Querys
+### StaticMaps.Querys
 
 * getQueries
 * registerQuery
 
-### StaticMap.Position
+### StaticMaps.Position
 
 * toQueryString
 
-### StaticMap.Map
+### StaticMaps.Map
 
 * toQueryString
 
-### StaticMap.Marker
+### StaticMaps.Marker
 
 * setProperties
 * setColor

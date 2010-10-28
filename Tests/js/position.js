@@ -1,6 +1,6 @@
 (function($){
 
-	var map = new StaticMap();
+	var map = new StaticMaps();
 
 	//center
 	var center = Function.attempt(function(){

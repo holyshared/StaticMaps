@@ -1,6 +1,6 @@
 (function($){
 
-	var map = new StaticMap();
+	var map = new StaticMaps();
 
 	//Size setter/getter
 	var size = Function.attempt(function(){
@@ -76,7 +76,7 @@
 
 
 	window.addEvent('domready', function(){
-		var map = new StaticMap({
+		var map = new StaticMaps({
 			positions: {
 				center: {
 					lat: 40.711614,
@@ -101,7 +101,7 @@
 			lng: -74.012318
 		};
 
-		var map = new StaticMap();
+		var map = new StaticMaps();
 		map.setSize(600, 300)
 		.setFormat('png')
 		.setMobile(false)

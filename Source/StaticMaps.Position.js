@@ -1,6 +1,6 @@
 /*
 ---
-name: StaticMap.Position
+name: StaticMaps.Position
 
 description: The function to change the display setting of the map to StaticMaps is added.
 
@@ -21,8 +21,8 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMap/StaticMap
-  - StaticMap/StaticMap.Map
+  - StaticMaps/StaticMaps
+  - StaticMaps/StaticMaps.Map
 
 provides: [StaticMap.Position]
 ...
@@ -30,9 +30,9 @@ provides: [StaticMap.Position]
 
 (function($){
 
-var StaticMap = (this.StaticMap || {});
+var StaticMaps = (this.StaticMaps || {});
 
-StaticMap.implement({
+StaticMaps.implement({
 
 	options: {
 		positions: {
@@ -87,10 +87,10 @@ StaticMap.implement({
 
 });
 
-StaticMap.Position = {};
+StaticMaps.Position = {};
 
 //Method of class of converting two or more positions into url query.
-StaticMap.Position.toQueryString = function(positions) {
+StaticMaps.Position.toQueryString = function(positions) {
 	var query = [];
 	var center = positions.center;
 	if (center) {
@@ -112,6 +112,6 @@ StaticMap.Position.toQueryString = function(positions) {
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMap.Querys.registerQuery('positions', StaticMap.Position.toQueryString);
+StaticMaps.Querys.registerQuery('positions', StaticMaps.Position.toQueryString);
 
 }(document.id));

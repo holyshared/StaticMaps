@@ -1,6 +1,6 @@
 /*
 ---
-name: StaticMap.Map
+name: StaticMaps.Map
 
 description: The setting of the map is added in StaticMaps and a revokable function is added.
 
@@ -21,18 +21,18 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMap/StaticMap
-  - StaticMap/StaticMap.Position
+  - StaticMaps/StaticMaps
+  - StaticMaps/StaticMaps.Position
 
-provides: [StaticMap.Map]
+provides: [StaticMaps.Map]
 ...
 */
 
 (function($){
 
-var StaticMap = (this.StaticMap || {});
+var StaticMaps = (this.StaticMaps || {});
 
-StaticMap.implement({
+StaticMaps.implement({
 
 	options: {
 		map: {
@@ -71,7 +71,7 @@ StaticMap.implement({
 	},
 
 	setFormat: function(format) {
-		if (StaticMap.Map.formats.indexOf(format) <= -1) {
+		if (StaticMaps.Map.formats.indexOf(format) <= -1) {
 			throw new TypeError('Png, jpg, and gif, etc. can be specified for an image format');
 		}
 		this.map['format'] = format;
@@ -79,7 +79,7 @@ StaticMap.implement({
 	},
 
 	setMapType: function(maptype) {
-		if (StaticMap.Map.maptypes.indexOf(maptype) <= -1) {
+		if (StaticMaps.Map.maptypes.indexOf(maptype) <= -1) {
 			throw new TypeError('Please specify either roadmap, satellite, terrain or hybrid for a type in the map');
 		}
 		this.map['maptype'] = maptype;
@@ -95,7 +95,7 @@ StaticMap.implement({
 	},
 
 	setLanguage: function(language) {
-		if (StaticMap.Map.languages.indexOf(language) <= -1) {
+		if (StaticMaps.Map.languages.indexOf(language) <= -1) {
 			throw new TypeError("The specified language doesn't correspond");
 		}
 		this.map['language'] = language;
@@ -124,16 +124,16 @@ StaticMap.implement({
 
 });
 
-StaticMap.Map = {};
+StaticMaps.Map = {};
 
 //Formats
-StaticMap.Map.formats = ['png', 'png8', 'png32', 'gif', 'jpg', 'jpg-baseline'];
+StaticMaps.Map.formats = ['png', 'png8', 'png32', 'gif', 'jpg', 'jpg-baseline'];
 
 //Maptypes
-StaticMap.Map.maptypes = ['roadmap', 'satellite', 'terrain', 'hybrid'];
+StaticMaps.Map.maptypes = ['roadmap', 'satellite', 'terrain', 'hybrid'];
 
 //ISO 639: 2-letter codes
-StaticMap.Map.languages = [
+StaticMaps.Map.languages = [
 	'aa', 'ab', 'af', 'am', 'ar','as','ay','az','ba','be','bg','bh','bi','bn','bo','br','ca','co','cs','cy','da',
 	'de','dz','el','en','eo','es','et','eu','fa','fi','fj','fo','fr','fy','ga','gd','gl','gn','gu','ha','hi','hr',
 	'hu','hy','ia','ie','ik','in','is','it','iw','ja','ji','jw','ka','kk','kl','km','kn','ko','ks','ku','ky','la',
@@ -144,7 +144,7 @@ StaticMap.Map.languages = [
 ];
 
 //Method of class of converting two or more map into url query.
-StaticMap.Map.toQueryString = function(map) {
+StaticMaps.Map.toQueryString = function(map) {
 	var query = [], value = null;
 	for (var key in map) {
 		value = map[key];
@@ -162,6 +162,6 @@ StaticMap.Map.toQueryString = function(map) {
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMap.Querys.registerQuery('map', StaticMap.Map.toQueryString);
+StaticMaps.Querys.registerQuery('map', StaticMaps.Map.toQueryString);
 
 }(document.id));

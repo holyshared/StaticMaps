@@ -1,6 +1,6 @@
 /*
 ---
-name: StaticMap.Marker
+name: StaticMaps.Marker
 
 description: The marker function is added to StaticMaps.
 
@@ -21,18 +21,18 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMap
-  - StaticMap.Map
+  - StaticMaps
+  - StaticMaps.Map
 
-provides: [StaticMap.Marker]
+provides: [StaticMaps.Marker]
 ...
 */
 
 (function($){
 
-var StaticMap = (this.StaticMap || {});
+var StaticMaps = (this.StaticMaps || {});
 
-StaticMap.implement({
+StaticMaps.implement({
 
 	options: {
 		markers: []
@@ -41,15 +41,15 @@ StaticMap.implement({
 	markers: [],
 
 	addMarker: function(marker){
-		if (!instanceOf(marker, StaticMap.Marker)) {
-			marker = new StaticMap.Marker(marker);
+		if (!instanceOf(marker, StaticMaps.Marker)) {
+			marker = new StaticMaps.Marker(marker);
 		}
 		this['markers'].push(marker);
 	}
 
 });
 
-StaticMap.Marker = new Class({
+StaticMaps.Marker = new Class({
 
 	props: {
 		color: null,
@@ -92,7 +92,7 @@ StaticMap.Marker = new Class({
 
 	setSize: function(size) {
 		if (typeOf(size) != 'string') throw new TypeError('The size is not a character string');
-		if (StaticMap.Marker.sizes.indexOf(size) <= - 1) {
+		if (StaticMaps.Marker.sizes.indexOf(size) <= - 1) {
 			throw new TypeError('The sizes are not either tiny, mid or small');
 		}
 		this.props['size'] = size;
@@ -147,8 +147,8 @@ StaticMap.Marker = new Class({
 
 	toQueryString: function() {
 		var query = [];
-		var orderKeys = StaticMap.Marker.orderKeys;
-		var l = StaticMap.Marker.orderKeys.length;
+		var orderKeys = StaticMaps.Marker.orderKeys;
+		var l = StaticMaps.Marker.orderKeys.length;
 		for (var i = 0; i < l; i++) {
 			key = orderKeys[i];
 			value = this.props[key];
@@ -174,15 +174,15 @@ StaticMap.Marker = new Class({
 });
 
 //Size of marker
-StaticMap.Marker.sizes = ['tiny', 'mid', 'small']; 
+StaticMaps.Marker.sizes = ['tiny', 'mid', 'small']; 
 
 //Color of marker
-StaticMap.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white']; 
+StaticMaps.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white']; 
 
-StaticMap.Marker.orderKeys = ['color', 'size', 'label', 'point'];
+StaticMaps.Marker.orderKeys = ['color', 'size', 'label', 'point'];
 
 //Method of factory of generating marker
-StaticMap.Marker.factory = function(props) {
+StaticMaps.Marker.factory = function(props) {
 	if (typeOf(props) == 'object') new TypeError('The property of the marker is not an object.');
 	var properties = Object.subset(props, ['color', 'size', 'label', 'point']);
 	for (var key in properties) {
@@ -190,12 +190,12 @@ StaticMap.Marker.factory = function(props) {
 			delete properties[key];
 		}
 	}
-	var marker = new StaticMap.Marker(properties);
+	var marker = new StaticMaps.Marker(properties);
 	return marker;
 };
 
 //Method of class of converting two or more markers into url query.
-StaticMap.Marker.toQueryString = function(markers) {
+StaticMaps.Marker.toQueryString = function(markers) {
 	var query = [], markerQuery = [];
 
 	var markersCopys = Array.clone(markers);
@@ -214,8 +214,8 @@ StaticMap.Marker.toQueryString = function(markers) {
 	return query.join('&');
 };
 
-//It registers in the [kueri] conversion processing of StaticMap.
+//It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMap.Querys.registerQuery('markers', StaticMap.Marker.toQueryString);
+StaticMaps.Querys.registerQuery('markers', StaticMaps.Marker.toQueryString);
 
 }(document.id));

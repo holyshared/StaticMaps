@@ -1,6 +1,6 @@
 (function($){
 
-	var map = new StaticMap();
+	var map = new StaticMaps();
 
 	map.setSize(600, 300);
 

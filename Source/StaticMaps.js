@@ -1,6 +1,6 @@
 /*
 ---
-name: StaticMap
+name: StaticMaps
 
 description: It draws in a static map with Static Maps API V2. The acquisition of URL is also possible.
 
@@ -22,13 +22,13 @@ requires:
   - Core/Class.Extras
   - Core/Element
 
-provides: [StaticMap, StaticMap.Querys]
+provides: [StaticMaps, StaticMaps.Querys]
 ...
 */
 
 (function($){
 
-var StaticMap = this.StaticMap = new Class({
+var StaticMaps = this.StaticMaps = new Class({
 
 	Implements: [Options],
 
@@ -59,7 +59,7 @@ var StaticMap = this.StaticMap = new Class({
 
 	getImage: function(){
 		var img = new Element('img', { 'src': this.toQueryString() });
-		if (StaticMap.Map != undefined){
+		if (StaticMaps.Map != undefined){
 			var size = this.getSize();
 			img.setProperties(this.getSize());
 		}
@@ -73,7 +73,7 @@ var StaticMap = this.StaticMap = new Class({
 
 	toQueryString: function() {
 		var query = [];
-		var queryConverters = StaticMap.Querys.getQueries();
+		var queryConverters = StaticMaps.Querys.getQueries();
 		for (var key in queryConverters) {
 			var property = this[key]; 
 			var converter = queryConverters[key];
@@ -86,15 +86,15 @@ var StaticMap = this.StaticMap = new Class({
 
 	factory: function(type, props){
 		var className = type.capitalize();
-		if (StaticMap[className] == null || StaticMap[className] == 'undefind') {
+		if (StaticMaps[className] == null || StaticMaps[className] == 'undefind') {
 			throw new TypeError('The class that was able to make it to the instance was not found');
 		}
-		return StaticMap[className].factory(props);
+		return StaticMaps[className].factory(props);
 	}
 
 });
 
-StaticMap.Querys = {
+StaticMaps.Querys = {
 
 	queries: {},
 

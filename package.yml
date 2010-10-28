@@ -1,6 +1,6 @@
 name: "StaticMaps"
 
-exports: "static-maps.js"
+exports: "staticmaps.js"
 
 web: "[http://sharedhat.com](http://sharedhat.com)"
 
@@ -13,10 +13,10 @@ license: "[MIT License](http://sharedhat.com/mit-license.txt)"
 copyright: "&copy; [Noritaka Horio](http://sharedhat.com)"
 
 sources:
-  - "Source/StaticMap.js"
-  - "Source/StaticMap.Position.js"
-  - "Source/StaticMap.Map.js"
-  - "Source/StaticMap.Marker.js"
+  - "Source/StaticMaps.js"
+  - "Source/StaticMaps.Position.js"
+  - "Source/StaticMaps.Map.js"
+  - "Source/StaticMaps.Marker.js"
 
 author: holyshared
 
