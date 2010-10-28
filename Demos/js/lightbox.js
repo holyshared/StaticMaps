@@ -3,22 +3,27 @@
 	var LightBox = this.LightBox = new Class({
 
 		_resize: {
-			transition: Fx.Transitions.Elastic.easeOut,
+			transition: 'elastic:out',
 			duration: 600
 		},
 
 		_fadeIn: {
-			transition: Fx.Transitions.Elastic.easeOut,
-			duration: 600
+			transition: 'expo:in:out',
+			duration: 100
 		},
 
 		initialize: function() {
+			var point = '原美術館';
 			this.map = new StaticMap({
 				map: { size: { width: 400, height: 200 } },
 				positions: {
-					center: '原美術館',
+					center: point,
 					zoom: 15
 				}
+			});
+			this.map.addMarker({
+				point: point,
+				label: 'H'
 			});
 			this._setup();
 		},
@@ -43,6 +48,8 @@
 		},
 
 		_onResize: function(){
+			this.container.removeClass('loading');
+
 			var fx = this.image.get('tween');
 			fx.start('opacity', 0, 1);
 		},
@@ -58,8 +65,10 @@
 			var source = this.map.toQueryString();
 
 			self.container.setStyle('opacity', 1);
+			self.container.addClass('loading');
 
 			var onload = function(){
+
 				var properties = this.getProperties('width', 'height', 'src')
 				self.image.setStyle('opacity', 0);
 				self.image.setProperties(properties);
@@ -80,6 +89,7 @@
 
 		hide: function() {
 			var self = this;
+			self.image.setStyle('opacity', 0);
 			var fx = self.container.get('tween');
 			fx.start('opacity', 1, 0);
 		}

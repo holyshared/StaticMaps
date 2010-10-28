@@ -74,7 +74,6 @@ StaticMap.implement({
 			throw new TypeError('');
 		}
 		this.positions['zoom'] = zoom;
-		return this;
 	},
 
 
