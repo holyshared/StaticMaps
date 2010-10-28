@@ -1,6 +1,6 @@
 /*
 ---
-name: StaticMap
+name: StaticMaps
 
 description: It draws in a static map with Static Maps API V2. The acquisition of URL is also possible.
 
@@ -22,13 +22,13 @@ requires:
   - Core/Class.Extras
   - Core/Element
 
-provides: [StaticMap, StaticMap.Querys]
+provides: [StaticMaps, StaticMaps.Querys]
 ...
 */
 
 (function($){
 
-var StaticMap = this.StaticMap = new Class({
+var StaticMaps = this.StaticMaps = new Class({
 
 	Implements: [Options],
 
@@ -59,7 +59,7 @@ var StaticMap = this.StaticMap = new Class({
 
 	getImage: function(){
 		var img = new Element('img', { 'src': this.toQueryString() });
-		if (StaticMap.Map != undefined){
+		if (StaticMaps.Map != undefined){
 			var size = this.getSize();
 			img.setProperties(this.getSize());
 		}
@@ -73,7 +73,7 @@ var StaticMap = this.StaticMap = new Class({
 
 	toQueryString: function() {
 		var query = [];
-		var queryConverters = StaticMap.Querys.getQueries();
+		var queryConverters = StaticMaps.Querys.getQueries();
 		for (var key in queryConverters) {
 			var property = this[key]; 
 			var converter = queryConverters[key];
@@ -86,15 +86,15 @@ var StaticMap = this.StaticMap = new Class({
 
 	factory: function(type, props){
 		var className = type.capitalize();
-		if (StaticMap[className] == null || StaticMap[className] == 'undefind') {
+		if (StaticMaps[className] == null || StaticMaps[className] == 'undefind') {
 			throw new TypeError('The class that was able to make it to the instance was not found');
 		}
-		return StaticMap[className].factory(props);
+		return StaticMaps[className].factory(props);
 	}
 
 });
 
-StaticMap.Querys = {
+StaticMaps.Querys = {
 
 	queries: {},
 
@@ -110,10 +110,9 @@ StaticMap.Querys = {
 
 }(document.id));
 
-
 /*
 ---
-name: StaticMap.Map
+name: StaticMaps.Map
 
 description: The setting of the map is added in StaticMaps and a revokable function is added.
 
@@ -134,18 +133,18 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMap/StaticMap
-  - StaticMap/StaticMap.Position
+  - StaticMaps/StaticMaps
+  - StaticMaps/StaticMaps.Position
 
-provides: [StaticMap.Map]
+provides: [StaticMaps.Map]
 ...
 */
 
 (function($){
 
-var StaticMap = (this.StaticMap || {});
+var StaticMaps = (this.StaticMaps || {});
 
-StaticMap.implement({
+StaticMaps.implement({
 
 	options: {
 		map: {
@@ -184,7 +183,7 @@ StaticMap.implement({
 	},
 
 	setFormat: function(format) {
-		if (StaticMap.Map.formats.indexOf(format) <= -1) {
+		if (StaticMaps.Map.formats.indexOf(format) <= -1) {
 			throw new TypeError('Png, jpg, and gif, etc. can be specified for an image format');
 		}
 		this.map['format'] = format;
@@ -192,7 +191,7 @@ StaticMap.implement({
 	},
 
 	setMapType: function(maptype) {
-		if (StaticMap.Map.maptypes.indexOf(maptype) <= -1) {
+		if (StaticMaps.Map.maptypes.indexOf(maptype) <= -1) {
 			throw new TypeError('Please specify either roadmap, satellite, terrain or hybrid for a type in the map');
 		}
 		this.map['maptype'] = maptype;
@@ -208,7 +207,7 @@ StaticMap.implement({
 	},
 
 	setLanguage: function(language) {
-		if (StaticMap.Map.languages.indexOf(language) <= -1) {
+		if (StaticMaps.Map.languages.indexOf(language) <= -1) {
 			throw new TypeError("The specified language doesn't correspond");
 		}
 		this.map['language'] = language;
@@ -237,16 +236,16 @@ StaticMap.implement({
 
 });
 
-StaticMap.Map = {};
+StaticMaps.Map = {};
 
 //Formats
-StaticMap.Map.formats = ['png', 'png8', 'png32', 'gif', 'jpg', 'jpg-baseline'];
+StaticMaps.Map.formats = ['png', 'png8', 'png32', 'gif', 'jpg', 'jpg-baseline'];
 
 //Maptypes
-StaticMap.Map.maptypes = ['roadmap', 'satellite', 'terrain', 'hybrid'];
+StaticMaps.Map.maptypes = ['roadmap', 'satellite', 'terrain', 'hybrid'];
 
 //ISO 639: 2-letter codes
-StaticMap.Map.languages = [
+StaticMaps.Map.languages = [
 	'aa', 'ab', 'af', 'am', 'ar','as','ay','az','ba','be','bg','bh','bi','bn','bo','br','ca','co','cs','cy','da',
 	'de','dz','el','en','eo','es','et','eu','fa','fi','fj','fo','fr','fy','ga','gd','gl','gn','gu','ha','hi','hr',
 	'hu','hy','ia','ie','ik','in','is','it','iw','ja','ji','jw','ka','kk','kl','km','kn','ko','ks','ku','ky','la',
@@ -257,7 +256,7 @@ StaticMap.Map.languages = [
 ];
 
 //Method of class of converting two or more map into url query.
-StaticMap.Map.toQueryString = function(map) {
+StaticMaps.Map.toQueryString = function(map) {
 	var query = [], value = null;
 	for (var key in map) {
 		value = map[key];
@@ -275,15 +274,13 @@ StaticMap.Map.toQueryString = function(map) {
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMap.Querys.registerQuery('map', StaticMap.Map.toQueryString);
+StaticMaps.Querys.registerQuery('map', StaticMaps.Map.toQueryString);
 
 }(document.id));
 
-
-
 /*
 ---
-name: StaticMap.Position
+name: StaticMaps.Position
 
 description: The function to change the display setting of the map to StaticMaps is added.
 
@@ -304,8 +301,8 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMap/StaticMap
-  - StaticMap/StaticMap.Map
+  - StaticMaps/StaticMaps
+  - StaticMaps/StaticMaps.Map
 
 provides: [StaticMap.Position]
 ...
@@ -313,9 +310,9 @@ provides: [StaticMap.Position]
 
 (function($){
 
-var StaticMap = (this.StaticMap || {});
+var StaticMaps = (this.StaticMaps || {});
 
-StaticMap.implement({
+StaticMaps.implement({
 
 	options: {
 		positions: {
@@ -357,7 +354,6 @@ StaticMap.implement({
 			throw new TypeError('');
 		}
 		this.positions['zoom'] = zoom;
-		return this;
 	},
 
 
@@ -371,10 +367,10 @@ StaticMap.implement({
 
 });
 
-StaticMap.Position = {};
+StaticMaps.Position = {};
 
 //Method of class of converting two or more positions into url query.
-StaticMap.Position.toQueryString = function(positions) {
+StaticMaps.Position.toQueryString = function(positions) {
 	var query = [];
 	var center = positions.center;
 	if (center) {
@@ -396,15 +392,13 @@ StaticMap.Position.toQueryString = function(positions) {
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMap.Querys.registerQuery('positions', StaticMap.Position.toQueryString);
+StaticMaps.Querys.registerQuery('positions', StaticMaps.Position.toQueryString);
 
 }(document.id));
 
-
-
 /*
 ---
-name: StaticMap.Marker
+name: StaticMaps.Marker
 
 description: The marker function is added to StaticMaps.
 
@@ -425,18 +419,18 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMap
-  - StaticMap.Map
+  - StaticMaps
+  - StaticMaps.Map
 
-provides: [StaticMap.Marker]
+provides: [StaticMaps.Marker]
 ...
 */
 
 (function($){
 
-var StaticMap = (this.StaticMap || {});
+var StaticMaps = (this.StaticMaps || {});
 
-StaticMap.implement({
+StaticMaps.implement({
 
 	options: {
 		markers: []
@@ -445,22 +439,21 @@ StaticMap.implement({
 	markers: [],
 
 	addMarker: function(marker){
-		if (!instanceOf(marker, StaticMap.Marker)) {
-			marker = new StaticMap.Marker(marker);
+		if (!instanceOf(marker, StaticMaps.Marker)) {
+			marker = new StaticMaps.Marker(marker);
 		}
 		this['markers'].push(marker);
 	}
 
 });
 
-StaticMap.Marker = new Class({
+StaticMaps.Marker = new Class({
 
 	props: {
 		color: null,
 		size: null,
 		label: null,
-		icon: null,
-		shadow: true
+		point: null
 	},
 
 	initialize: function(props){
@@ -497,7 +490,7 @@ StaticMap.Marker = new Class({
 
 	setSize: function(size) {
 		if (typeOf(size) != 'string') throw new TypeError('The size is not a character string');
-		if (StaticMap.Marker.sizes.indexOf(size) <= - 1) {
+		if (StaticMaps.Marker.sizes.indexOf(size) <= - 1) {
 			throw new TypeError('The sizes are not either tiny, mid or small');
 		}
 		this.props['size'] = size;
@@ -524,45 +517,20 @@ StaticMap.Marker = new Class({
 		return this;
 	},
 
-	setIcon: function(url) {
-		if (typeOf(url) != 'string') throw new TypeError('The url is not a character string');
-		if (!url.test(/^(((ht|f)tp(s?))\:\/\/)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/)) {
-			throw new TypeError('It is not a format of url');
-		}
-		this.props['icon'] = url;
-		return this;
-	},
-
-	setShadow: function(value) {
-		if (typeOf(value) != 'boolean') {
-			throw new TypeError('The data type is not boolean');
-		}
-		this.props['shadow'] = value;
-		return this;
-	},
-
-	getColor: function() {
+	getColor: function(color) {
 		return this.props['color'];
 	},
 
-	getLabel: function() {
+	getLabel: function(label) {
 		return this.props['label'];
 	},
 
-	getSize: function() {
+	getSize: function(size) {
 		return this.props['size'];
 	},
 
-	getPoint: function() {
+	getPoint: function(point) {
 		return this.props['point'];
-	},
-
-	getIcon: function() {
-		return this.props['icon'];
-	},
-
-	getShadow: function() {
-		return this.props['shadow'];
 	},
 
 	toObject: function() {
@@ -577,31 +545,24 @@ StaticMap.Marker = new Class({
 
 	toQueryString: function() {
 		var query = [];
-		var orderKeys = StaticMap.Marker.orderKeys;
-		var l = StaticMap.Marker.orderKeys.length;
+		var orderKeys = StaticMaps.Marker.orderKeys;
+		var l = StaticMaps.Marker.orderKeys.length;
 		for (var i = 0; i < l; i++) {
 			key = orderKeys[i];
 			value = this.props[key];
 			if (value == null && value == undefined) continue;
 			switch(key) {
+				case 'color':
+				case 'label':
+				case 'size':
+					query.push(key + ':' + value);
+					break;
 				case 'point':
 					if (typeOf(value) == 'string') {
 						query.push(encodeURIComponent(value));
 					} else {
 						query.push(value.lat + ',' + value.lng);
 					}
-					break;
-				case 'icon':
-					var position = value.indexOf('?');
-					if (position >= 0) {
-						var f = value.substr(0, position);
-						var b = value.substr(position + 1);
-						value = f + '?' + encodeURIComponent(b);
-					}
-					query.push(key + ':' + value);
-					break;
-				default:
-					query.push(key + ':' + value);
 					break;
 			}
 		}
@@ -611,28 +572,28 @@ StaticMap.Marker = new Class({
 });
 
 //Size of marker
-StaticMap.Marker.sizes = ['tiny', 'mid', 'small']; 
+StaticMaps.Marker.sizes = ['tiny', 'mid', 'small']; 
 
 //Color of marker
-StaticMap.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white']; 
+StaticMaps.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white']; 
 
-StaticMap.Marker.orderKeys = ['color', 'size', 'label', 'icon', 'shadow', 'point'];
+StaticMaps.Marker.orderKeys = ['color', 'size', 'label', 'point'];
 
 //Method of factory of generating marker
-StaticMap.Marker.factory = function(props) {
+StaticMaps.Marker.factory = function(props) {
 	if (typeOf(props) == 'object') new TypeError('The property of the marker is not an object.');
-	var properties = Object.subset(props, ['color', 'size', 'label', 'icon', 'shadow', 'point']);
+	var properties = Object.subset(props, ['color', 'size', 'label', 'point']);
 	for (var key in properties) {
 		if (properties[key] == undefined) {
 			delete properties[key];
 		}
 	}
-	var marker = new StaticMap.Marker(properties);
+	var marker = new StaticMaps.Marker(properties);
 	return marker;
 };
 
 //Method of class of converting two or more markers into url query.
-StaticMap.Marker.toQueryString = function(markers) {
+StaticMaps.Marker.toQueryString = function(markers) {
 	var query = [], markerQuery = [];
 
 	var markersCopys = Array.clone(markers);
@@ -651,8 +612,8 @@ StaticMap.Marker.toQueryString = function(markers) {
 	return query.join('&');
 };
 
-//It registers in the [kueri] conversion processing of StaticMap.
+//It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMap.Querys.registerQuery('markers', StaticMap.Marker.toQueryString);
+StaticMaps.Querys.registerQuery('markers', StaticMaps.Marker.toQueryString);
 
 }(document.id));
