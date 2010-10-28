@@ -13,12 +13,17 @@
 		},
 
 		initialize: function() {
+			var point = '原美術館';
 			this.map = new StaticMap({
 				map: { size: { width: 400, height: 200 } },
 				positions: {
-					center: '原美術館',
+					center: point,
 					zoom: 15
 				}
+			});
+			this.map.addMarker({
+				point: point,
+				label: 'H'
 			});
 			this._setup();
 		},
