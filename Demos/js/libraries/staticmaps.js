@@ -77,7 +77,10 @@ var StaticMaps = this.StaticMaps = new Class({
 		for (var key in queryConverters) {
 			var property = this[key]; 
 			var converter = queryConverters[key];
-			query.push(converter(property));
+			var result = converter(property);
+			if (result != '') {
+				query.push(result);
+			}
 		}
 		var url = this.url + '?' + query.join('&');
 		url = url + '&sensor=' + this.getSensor();
@@ -453,6 +456,8 @@ StaticMaps.Marker = new Class({
 		color: null,
 		size: null,
 		label: null,
+	    icon: null,
+		shadow: true,
 		point: null
 	},
 
@@ -471,7 +476,7 @@ StaticMaps.Marker = new Class({
 
 	setColor: function(color) {
 		if (typeOf(color) != 'string') throw new TypeError('The color is not a character string');
-		if (StaticMap.Marker.colors.indexOf(color) <= -1
+		if (StaticMaps.Marker.colors.indexOf(color) <= -1
 			&& !color.test(/^0x[A-Z0-9]{6}$/)) {
 			throw new TypeError('They are not curlers such as 24 bit color or black, brown, and green');
 		}
@@ -517,6 +522,23 @@ StaticMaps.Marker = new Class({
 		return this;
 	},
 
+	setIcon: function(url) {
+		if (typeOf(url) != 'string') throw new TypeError('The url is not a character string');
+		if (!url.test(/^(((ht|f)tp(s?))\:\/\/)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/)) {
+			throw new TypeError('It is not a format of url');
+		}
+		this.props['icon'] = url;
+		return this;
+	},
+
+	setShadow: function(value) {
+		if (typeOf(value) != 'boolean') {
+			throw new TypeError('The data type is not boolean');
+		}
+		this.props['shadow'] = value;
+		return this;
+	},
+
 	getColor: function(color) {
 		return this.props['color'];
 	},
@@ -531,6 +553,14 @@ StaticMaps.Marker = new Class({
 
 	getPoint: function(point) {
 		return this.props['point'];
+	},
+
+	getIcon: function() {
+		return this.props['icon'];
+	},
+
+	getShadow: function() {
+		return this.props['shadow'];
 	},
 
 	toObject: function() {
@@ -552,17 +582,15 @@ StaticMaps.Marker = new Class({
 			value = this.props[key];
 			if (value == null && value == undefined) continue;
 			switch(key) {
-				case 'color':
-				case 'label':
-				case 'size':
-					query.push(key + ':' + value);
-					break;
 				case 'point':
 					if (typeOf(value) == 'string') {
 						query.push(encodeURIComponent(value));
 					} else {
 						query.push(value.lat + ',' + value.lng);
 					}
+					break;
+				default:
+					query.push(key + ':' + value);
 					break;
 			}
 		}
@@ -577,12 +605,12 @@ StaticMaps.Marker.sizes = ['tiny', 'mid', 'small'];
 //Color of marker
 StaticMaps.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white']; 
 
-StaticMaps.Marker.orderKeys = ['color', 'size', 'label', 'point'];
+StaticMaps.Marker.orderKeys = ['color', 'size', 'label', 'icon', 'shadow', 'point'];
 
 //Method of factory of generating marker
 StaticMaps.Marker.factory = function(props) {
 	if (typeOf(props) == 'object') new TypeError('The property of the marker is not an object.');
-	var properties = Object.subset(props, ['color', 'size', 'label', 'point']);
+	var properties = Object.subset(props, ['color', 'size', 'label', 'icon', 'shadow', 'point']);
 	for (var key in properties) {
 		if (properties[key] == undefined) {
 			delete properties[key];
@@ -595,6 +623,8 @@ StaticMaps.Marker.factory = function(props) {
 //Method of class of converting two or more markers into url query.
 StaticMaps.Marker.toQueryString = function(markers) {
 	var query = [], markerQuery = [];
+
+	if (markers.length <= 0) return '';
 
 	var markersCopys = Array.clone(markers);
 	var marker = markersCopys.shift();
