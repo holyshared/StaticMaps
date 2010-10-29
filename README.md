@@ -36,7 +36,7 @@ It draws in the map in the element that specifies the parameter necessary for th
 	window.addEvent('domready', function(){
 		var map = new StaticMaps({
 			positions: {
-				center: {lat: 444, lng: 1111},
+				center: {lat: 35.710698, lng: 139.81257},
 				zoom: 15
 			},
 			map: {
@@ -57,10 +57,10 @@ It draws in the map in the element that specifies the parameter necessary for th
 					point: 'New York'
 				},
 				{
-					color: '0xCCCCCCC',
+					color: '0xFFCCCCC',
 					size: 'mid',
 					label: 'B',
-					point: {lat: 100, lng: 100}
+					point: {lat: 40.714353, lng: -74.005973}
 				}
 			]
 		});
@@ -77,8 +77,8 @@ Moreover, it is also possible to specify it individually by using the method of 
 
 		map.setSize(600, 300)
 			.setCenter({
-				lat: 0200,
-				lng: 0200
+				lat: 35.710698,
+				lng: 139.81257
 			})
 			.setZoom(15);
 
@@ -94,9 +94,12 @@ Moreover, it is also possible to specify it individually by using the method of 
 			size: 'mid'
 		});
 		marker.setLable('B')
-			.setPoint({lat: 100, lng: 100});
+			.setPoint({
+				lat: 40.714353,
+				lng: -74.005973
+			});
 
-		map.addMarker(marker.setLable);
+		map.addMarker(marker);
 		map.renderTo($('staticMap'));
 
 		//A new map is added. 
