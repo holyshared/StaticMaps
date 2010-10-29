@@ -78,12 +78,39 @@
 	});
 	(point2) ? console.log('point2 getter/setter success') : console.log('point2 getter/setter failure');
 
+	var icon = Function.attempt(function(){
+		marker.setIcon('');
+		return false;
+	}, function(){
+		marker.setIcon(null);
+		return false;
+	}, function(){
+		marker.setIcon('http://holyshared.github.com/StaticMaps/images/img_marker1.png');
+		var icon = marker.getIcon();
+		return (icon == 'http://holyshared.github.com/StaticMaps/images/img_marker1.png');
+	});
+	(icon) ? console.log('icon getter/setter success') : console.log('icon getter/setter failure');
+
+
+	var shadow = Function.attempt(function(){
+		marker.setShadow('');
+		return false;
+	}, function(){
+		marker.setShadow(null);
+		return false;
+	}, function(){
+		marker.setShadow(true);
+		var shadow = marker.getShadow();
+		return (shadow == true);
+	});
+	(shadow) ? console.log('shadow getter/setter success') : console.log('shadow getter/setter failure');
+
 	//QueryString
 	map.addMarker(marker);
 
-	var testURL = 'http://maps.google.com/maps/api/staticmap?size=600x300&markers=color:black|size:mid|label:T|Williamsburg%2CBrooklyn%2CNY&sensor=false';
+	var testURL = 'http://maps.google.com/maps/api/staticmap?size=600x300&markers=color:black|size:mid|label:T|icon:http://holyshared.github.com/StaticMaps/images/img_marker1.png|shadow:true|Williamsburg%2CBrooklyn%2CNY&sensor=false';
 	var url = map.toQueryString();
-	(url == testURL) ? console.log('toQueryString getter/setter success') : console.log('toQueryString getter/setter failure');
+	(url == testURL) ? console.log('toQueryString success') : console.log('toQueryString failure');
 
 	window.addEvent('domready', function(){
 		map.renderTo($('staticMap'));

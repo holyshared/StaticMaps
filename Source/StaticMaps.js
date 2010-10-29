@@ -77,7 +77,10 @@ var StaticMaps = this.StaticMaps = new Class({
 		for (var key in queryConverters) {
 			var property = this[key]; 
 			var converter = queryConverters[key];
-			query.push(converter(property));
+			var result = converter(property);
+			if (result != '') {
+				query.push(result);
+			}
 		}
 		var url = this.url + '?' + query.join('&');
 		url = url + '&sensor=' + this.getSensor();
