@@ -28,3 +28,7 @@ dl dt {
 dl dd {
 	margin-bottom: 5px;
 }
+
+abbr {
+	border: none;
+}
