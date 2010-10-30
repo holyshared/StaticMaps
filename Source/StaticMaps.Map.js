@@ -171,14 +171,16 @@ StaticMaps.Hooks.registerDefaults('map', StaticMaps.Map.setDefaults);
 StaticMaps.Map.toQueryString = function(map) {
 	var query = [], value = null;
 	for (var key in map) {
-		value = map[key];
-		if (value == null && value == undefined) continue;
-		switch(key) {
-			case 'size':
-				query.push(key + '=' + value.width + 'x' + value.height);
-				break;
-			default:
-				query.push(key + '=' + value);
+		if (map.hasOwnProperty(key)) {
+			value = map[key];
+			if (value == null && value == undefined) continue;
+			switch (key) {
+				case 'size':
+					query.push(key + '=' + value.width + 'x' + value.height);
+					break;
+				default:
+					query.push(key + '=' + value);
+			}
 		}
 	}
 	return query.join('&');

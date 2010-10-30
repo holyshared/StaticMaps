@@ -71,15 +71,18 @@ StaticMaps.Marker = new Class({
 	},
 
 	initialize: function(props){
-		this.setProperties(props);
+		var properties = props = (props || {});
+		this.setProperties(properties);
 	},
 
 	setProperties: function(props) {
 		var method = null, value = null;
 		for (var key in props) {
-			method = key.capitalize();
-			value = props[key];
-			this["set" + method](value);
+			if (props.hasOwnProperty(key)) {
+				method = key.capitalize();
+				value = props[key];
+				this["set" + method](value);
+			}
 		}
 	},
 
@@ -148,6 +151,10 @@ StaticMaps.Marker = new Class({
 		return this;
 	},
 
+	getProperties: function(props) {
+		return this.props;
+	},
+
 	getColor: function(color) {
 		return this.props['color'];
 	},
@@ -175,9 +182,11 @@ StaticMaps.Marker = new Class({
 	toObject: function() {
 		var object = {};
 		for (var key in this.props) {
-			value = this.props[key];
-			if (value == null && value == undefined) continue;
-			object[key] = value;
+			if (this.props.hasOwnProperty(key)) {
+				value = this.props[key];
+				if (value == null && value == undefined) continue;
+				object[key] = value;
+			}
 		}
 		return object;
 	},
@@ -227,13 +236,16 @@ StaticMaps.Hooks.registerDefaults('markers', StaticMaps.Marker.setDefaults);
 
 //Method of factory of generating marker
 StaticMaps.Marker.factory = function(props) {
-	if (typeOf(props) == 'object') new TypeError('The property of the marker is not an object.');
-	var properties = Object.subset(props, ['color', 'size', 'label', 'icon', 'shadow', 'point']);
+
+	var properties = Object.subset(props || {}, ['color', 'size', 'label', 'icon', 'shadow', 'point']);
 	for (var key in properties) {
-		if (properties[key] == undefined) {
-			delete properties[key];
+		if (properties.hasOwnProperty(key)) {
+			if (properties[key] == undefined) {
+				delete properties[key];
+			}
 		}
 	}
+
 	var marker = new StaticMaps.Marker(properties);
 	return marker;
 };

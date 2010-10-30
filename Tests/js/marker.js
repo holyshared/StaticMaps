@@ -105,6 +105,13 @@
 	});
 	(shadow) ? console.log('shadow getter/setter success') : console.log('shadow getter/setter failure');
 
+
+	var emptyMarker = Function.attempt(function(){
+		var marker1 = map.factory('marker');
+		return true;
+	});
+	(emptyMarker) ? console.log('empty marker success') : console.log('empty marker failure');
+
 	//QueryString
 	map.addMarker(marker);
 

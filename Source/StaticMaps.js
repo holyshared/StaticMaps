@@ -72,9 +72,11 @@ var StaticMaps = this.StaticMaps = new Class({
 		var property = null, setter = null;
 		var defaultSetters = StaticMaps.Hooks.getDefaults();
 		for (var key in defaultSetters) {
-			property = this.options[key]; 
-			setter = defaultSetters[key].bind(this);
-			setter(property);
+			if (defaultSetters.hasOwnProperty(key)) {
+				property = this.options[key];
+				setter = defaultSetters[key].bind(this);
+				setter(property);
+			}
 		}
 	},
 
@@ -82,11 +84,13 @@ var StaticMaps = this.StaticMaps = new Class({
 		var query = [];
 		var queryConverters = StaticMaps.Hooks.getQueries();
 		for (var key in queryConverters) {
-			var property = this[key]; 
-			var converter = queryConverters[key];
-			var result = converter(property);
-			if (result != '') {
-				query.push(result);
+			if (queryConverters.hasOwnProperty(key)) {
+				var property = this[key]; 
+				var converter = queryConverters[key];
+				var result = converter(property);
+				if (result != '') {
+					query.push(result);
+				}
 			}
 		}
 		var url = this._url + '?' + query.join('&');

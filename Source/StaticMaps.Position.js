@@ -93,11 +93,13 @@ StaticMaps.Position = {};
 StaticMaps.Position.setDefaults = function(props) {
 	var method = null, value = null;
 	for (var key in props) {
-		method = key.capitalize();
-		value = props[key];
-		if (value === null || value === undefined) continue;
 		if (props.hasOwnProperty(key)) {
-			this["set" + method](value);
+			method = key.capitalize();
+			value = props[key];
+			if (value === null || value === undefined) continue;
+			if (props.hasOwnProperty(key)) {
+				this["set" + method](value);
+			}
 		}
 	}
 };
