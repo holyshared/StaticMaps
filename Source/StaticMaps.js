@@ -22,7 +22,7 @@ requires:
   - Core/Class.Extras
   - Core/Element
 
-provides: [StaticMaps, StaticMaps.Querys]
+provides: [StaticMaps, StaticMaps.Hooks]
 ...
 */
 
@@ -34,16 +34,13 @@ var StaticMaps = this.StaticMaps = new Class({
 
 	options: {},
 
-	url: 'http://maps.google.com/maps/api/staticmap',
+	_url: 'http://maps.google.com/maps/api/staticmap',
 
 	sensor: false,
 
 	initialize: function(options){
 		this.setOptions(options);
-		var op = this.options;
-		for (var key in op) {
-			this[key] = op[key];
-		}
+		this._setDefaultValues();
 	},
 
 	setSensor: function(value) {
@@ -57,7 +54,7 @@ var StaticMaps = this.StaticMaps = new Class({
 		return this.sensor;
 	},
 
-	getImage: function(){
+	_getImage: function(){
 		var img = new Element('img', { 'src': this.toQueryString() });
 		if (StaticMaps.Map != undefined){
 			var size = this.getSize();
@@ -67,13 +64,23 @@ var StaticMaps = this.StaticMaps = new Class({
 	},
 
 	renderTo: function(element){
-		var img = this.getImage();
+		var img = this._getImage();
 		img.inject(element);
+	},
+
+	_setDefaultValues: function() {
+		var property = null, setter = null;
+		var defaultSetters = StaticMaps.Hooks.getDefaults();
+		for (var key in defaultSetters) {
+			property = this.options[key]; 
+			setter = defaultSetters[key].bind(this);
+			setter(property);
+		}
 	},
 
 	toQueryString: function() {
 		var query = [];
-		var queryConverters = StaticMaps.Querys.getQueries();
+		var queryConverters = StaticMaps.Hooks.getQueries();
 		for (var key in queryConverters) {
 			var property = this[key]; 
 			var converter = queryConverters[key];
@@ -82,7 +89,7 @@ var StaticMaps = this.StaticMaps = new Class({
 				query.push(result);
 			}
 		}
-		var url = this.url + '?' + query.join('&');
+		var url = this._url + '?' + query.join('&');
 		url = url + '&sensor=' + this.getSensor();
 		return url;
 	},
@@ -97,18 +104,30 @@ var StaticMaps = this.StaticMaps = new Class({
 
 });
 
-StaticMaps.Querys = {
+StaticMaps.Hooks = {
 
+	defaults: {},
 	queries: {},
+
+	getDefaults: function() {
+		return this.defaults;
+	},
 
 	getQueries: function() {
 		return this.queries;
 	},
 
+	registerDefaults: function(key, fn) {
+		if (typeOf(fn) != 'function') return;
+		this.defaults[key] = fn;
+	},
+
 	registerQuery: function(key, fn) {
+		if (typeOf(fn) != 'function') return;
 		this.queries[key] = fn;
 	}
 
 };
+
 
 }(document.id));

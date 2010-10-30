@@ -45,6 +45,16 @@ StaticMaps.implement({
 			marker = new StaticMaps.Marker(marker);
 		}
 		this['markers'].push(marker);
+	},
+
+	removeMarker: function(value){
+		var target = value;
+		if (typeOf(value) == 'number') {
+			if (this['markers'][value]) {
+				target = this['markers'][value]; 
+			}
+		}
+		this['markers'].erase(target);
 	}
 
 });
@@ -206,6 +216,15 @@ StaticMaps.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue
 
 StaticMaps.Marker.orderKeys = ['color', 'size', 'label', 'icon', 'shadow', 'point'];
 
+//The hook that sets an initial value is added. 
+StaticMaps.Marker.setDefaults = function(markers) {
+	var marker = null, len = markers.length;
+	for (var i = 0; len > i; i++ ) {
+		this.addMarker(markers[i]);
+	}
+};
+StaticMaps.Hooks.registerDefaults('markers', StaticMaps.Marker.setDefaults);
+
 //Method of factory of generating marker
 StaticMaps.Marker.factory = function(props) {
 	if (typeOf(props) == 'object') new TypeError('The property of the marker is not an object.');
@@ -243,6 +262,6 @@ StaticMaps.Marker.toQueryString = function(markers) {
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMaps.Querys.registerQuery('markers', StaticMaps.Marker.toQueryString);
+StaticMaps.Hooks.registerQuery('markers', StaticMaps.Marker.toQueryString);
 
 }(document.id));

@@ -21,8 +21,8 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMaps/StaticMaps
-  - StaticMaps/StaticMaps.Map
+  - StaticMaps
+  - StaticMaps.Map
 
 provides: [StaticMaps.Position]
 ...
@@ -35,13 +35,13 @@ var StaticMaps = (this.StaticMaps || {});
 StaticMaps.implement({
 
 	options: {
-		positions: {
+		position: {
 			center: null,
 			zoom: null
 		}
 	},
 
-	positions: {
+	position: {
 		center: null,
 		zoom: null
 	},
@@ -62,7 +62,7 @@ StaticMaps.implement({
 			default:
 				throw new TypeError('The data type at the position is a character string or not an object');
 		}
-		this.positions['center'] = point;
+		this.position['center'] = point;
 		return this;
 	},
 
@@ -73,26 +73,40 @@ StaticMaps.implement({
 		if (zoom < 0 || zoom > 21) {
 			throw new TypeError('');
 		}
-		this.positions['zoom'] = zoom;
+		this.position['zoom'] = zoom;
 	},
 
 
 	getCenter: function(){
-		return this.positions['center'];
+		return this.position['center'];
 	},
 
 	getZoom: function(zoom){
-		return this.positions['zoom'];
+		return this.position['zoom'];
 	}
 
 });
 
 StaticMaps.Position = {};
 
+//The hook that sets an initial value is added. 
+StaticMaps.Position.setDefaults = function(props) {
+	var method = null, value = null;
+	for (var key in props) {
+		if (props.hasOwnProperty(key)) {
+			method = key.capitalize();
+			value = props[key];
+			this["set" + method](value);
+		}
+	}
+};
+StaticMaps.Hooks.registerDefaults('position', StaticMaps.Position.setDefaults);
+
+
 //Method of class of converting two or more positions into url query.
-StaticMaps.Position.toQueryString = function(positions) {
+StaticMaps.Position.toQueryString = function(position) {
 	var query = [];
-	var center = positions.center;
+	var center = position.center;
 	if (center) {
 		switch(typeOf(center)) {
 			case 'string':
@@ -104,14 +118,14 @@ StaticMaps.Position.toQueryString = function(positions) {
 		}
 	}
 
-	if (positions.zoom) {
-		query.push('zoom=' + positions.zoom);
+	if (position.zoom) {
+		query.push('zoom=' + position.zoom);
 	}
 	return query.join('&');
 };
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMaps.Querys.registerQuery('positions', StaticMaps.Position.toQueryString);
+StaticMaps.Hooks.registerQuery('position', StaticMaps.Position.toQueryString);
 
 }(document.id));

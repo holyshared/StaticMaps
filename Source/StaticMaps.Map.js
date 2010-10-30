@@ -21,8 +21,8 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMaps/StaticMaps
-  - StaticMaps/StaticMaps.Position
+  - StaticMaps
+  - StaticMaps.Position
 
 provides: [StaticMaps.Map]
 ...
@@ -143,6 +143,29 @@ StaticMaps.Map.languages = [
 	'wo','xh','yo','zh','zu'
 ];
 
+//The hook that sets an initial value is added. 
+StaticMaps.Map.setDefaults = function(props) {
+	var method = null, value = null;
+	for (var key in props) {
+		if (props.hasOwnProperty(key)) {
+			method = key.capitalize();
+			value = props[key];
+			switch (key) {
+				case 'size':
+					this.setSize(value.width, value.height);
+					break;
+				case 'maptype':
+					this.setMapType(value);
+					break;
+				default:
+					this["set" + method](value);
+					break;
+			}
+		}
+	}
+};
+StaticMaps.Hooks.registerDefaults('map', StaticMaps.Map.setDefaults);
+
 //Method of class of converting two or more map into url query.
 StaticMaps.Map.toQueryString = function(map) {
 	var query = [], value = null;
@@ -162,6 +185,6 @@ StaticMaps.Map.toQueryString = function(map) {
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMaps.Querys.registerQuery('map', StaticMaps.Map.toQueryString);
+StaticMaps.Hooks.registerQuery('map', StaticMaps.Map.toQueryString);
 
 }(document.id));
