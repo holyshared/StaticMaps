@@ -307,7 +307,7 @@ requires:
   - StaticMaps/StaticMaps
   - StaticMaps/StaticMaps.Map
 
-provides: [StaticMap.Position]
+provides: [StaticMaps.Position]
 ...
 */
 
