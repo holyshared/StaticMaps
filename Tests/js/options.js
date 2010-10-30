@@ -5,7 +5,7 @@
 		var options = {
 			map: {
 				size: { width: 600, height: 300 },
-				format: 'png32',
+				format: 'png',
 				maptype: 'roadmap',
 				mobile: false,
 				language: 'en'
@@ -21,7 +21,6 @@
 				}
 			]
 		};
-
 		var map = new StaticMaps(options);
 		map.renderTo($('map'));
 	});

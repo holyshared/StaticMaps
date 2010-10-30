@@ -147,9 +147,10 @@ StaticMaps.Map.languages = [
 StaticMaps.Map.setDefaults = function(props) {
 	var method = null, value = null;
 	for (var key in props) {
+		method = key.capitalize();
+		value = props[key];
+		if (value === null || value === undefined) continue;
 		if (props.hasOwnProperty(key)) {
-			method = key.capitalize();
-			value = props[key];
 			switch (key) {
 				case 'size':
 					this.setSize(value.width, value.height);
