@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 #warpper {
-	width: 560px;
+	width: 750px;
 	margin: 20px auto 0px auto;
 	text-align: left;
 	z-index: 0;
@@ -96,4 +96,27 @@
 
 .loading {
 	background: #ffffff url(../images/spinner.gif) no-repeat center center;
+}
+
+
+
+.vevent {
+	overflow: hidden;
+	zoom: 1;
+}
+
+.map {
+	float: left;
+	width: 270px;
+	border: 1px solid #cccccc;
+	padding: 5px;
+}
+
+.eventDetail {
+	float: right;
+	width: 415px;
+}
+
+.attendee {
+	text-align: right;
 }

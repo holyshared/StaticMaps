@@ -9,7 +9,10 @@
 		<script type="text/javascript" src="js/libraries/mootools-core-1.3.js"></script>
 		<script type="text/javascript" src="js/libraries/mootools-more.js"></script>
 		<script type="text/javascript" src="js/libraries/staticmaps.js"></script>
-		<script type="text/javascript" src="js/lightbox.js"></script>
+		<script type="text/javascript" src="js/libraries/microformat.js"></script>
+		<script type="text/javascript" src="js/libraries/hcalendar.js"></script>
+		<script type="text/javascript" src="js/libraries/hcard.js"></script>
+		<script type="text/javascript" src="js/microformat.js"></script>
 	</head>
 	<body>
 		<div id="warpper">
@@ -23,11 +26,22 @@
 			</div>
 
 			<div class="body">
-				<p>When the show link is clicked, the map is displayed.<br />
-				The map is made non-display by the hide link.</p>
-				<p><a id="show" href="#">show</a> | <a id="hide" href="#">hide</a></p>
+				<div class="vevent">
+					<p class="map"></p>
+					<div class="eventDetail">
+						<h2 class="summary"><a class="url" href="http://mootools.net">Mootools study meeting</a></h2>
+						<p class="description">Mootools study meeting in Japan<br />It talks while eating.</p>
+						<dl>
+							<dt>Period:</dt>
+							<dd><abbr class="dtstart" title="2010-11-01">1 November 2010</abbr> - <abbr class="dtend" title="2010-11-05">5 November 2010</abbr></dd>
+							<dt>Location:</dt>
+							<dd class="location"><a href="http://onthecorner-shibuya.com/"><abbr title="35.661444;139.703127" class="geo">ON THE CORNER</abbr></a></dd>
+						</dl>
+						
+						<p class="attendee">Contact: <a href="http://sharedhat.com" class="url fn n">Noritka Horio(<em class="nickname">horry</em>)</a></p>
+					</div>
+				</div>
 			</div>
-
 			<div class="foot">
 				<p>Copyright 2010 <a href="http://sharedhat.com/">Noritaka Horio</a> All Rights Reserved.</p>
 			</div>
