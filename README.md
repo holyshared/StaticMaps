@@ -35,7 +35,7 @@ It draws in the map in the element that specifies the parameter necessary for th
 	#JS
 	window.addEvent('domready', function(){
 		var map = new StaticMaps({
-			positions: {
+			position: {
 				center: {lat: 35.710698, lng: 139.81257},
 				zoom: 15
 			},
@@ -111,9 +111,9 @@ Moreover, it is also possible to specify it individually by using the method of 
 
 #### Options
 
-##### Positions
+##### Position
 
-* **positions**: (object) - Position where map is displayed.
+* **position**: (object) - Position where map is displayed.
 	* **center**: (object|string) - The center position, the coordinates position or the address in the map can be specified. 
 	* **zoom**: (number) - Zoom level of map. The value from 0 to 21 can be specified.
 

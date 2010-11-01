@@ -45,6 +45,16 @@ StaticMaps.implement({
 			marker = new StaticMaps.Marker(marker);
 		}
 		this['markers'].push(marker);
+	},
+
+	removeMarker: function(value){
+		var target = value;
+		if (typeOf(value) == 'number') {
+			if (this['markers'][value]) {
+				target = this['markers'][value]; 
+			}
+		}
+		this['markers'].erase(target);
 	}
 
 });
@@ -61,15 +71,18 @@ StaticMaps.Marker = new Class({
 	},
 
 	initialize: function(props){
-		this.setProperties(props);
+		var properties = props = (props || {});
+		this.setProperties(properties);
 	},
 
 	setProperties: function(props) {
 		var method = null, value = null;
 		for (var key in props) {
-			method = key.capitalize();
-			value = props[key];
-			this["set" + method](value);
+			if (props.hasOwnProperty(key)) {
+				method = key.capitalize();
+				value = props[key];
+				this["set" + method](value);
+			}
 		}
 	},
 
@@ -138,6 +151,10 @@ StaticMaps.Marker = new Class({
 		return this;
 	},
 
+	getProperties: function(props) {
+		return this.props;
+	},
+
 	getColor: function(color) {
 		return this.props['color'];
 	},
@@ -165,9 +182,11 @@ StaticMaps.Marker = new Class({
 	toObject: function() {
 		var object = {};
 		for (var key in this.props) {
-			value = this.props[key];
-			if (value == null && value == undefined) continue;
-			object[key] = value;
+			if (this.props.hasOwnProperty(key)) {
+				value = this.props[key];
+				if (value == null && value == undefined) continue;
+				object[key] = value;
+			}
 		}
 		return object;
 	},
@@ -206,15 +225,27 @@ StaticMaps.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue
 
 StaticMaps.Marker.orderKeys = ['color', 'size', 'label', 'icon', 'shadow', 'point'];
 
+//The hook that sets an initial value is added. 
+StaticMaps.Marker.setDefaults = function(markers) {
+	var marker = null, len = markers.length;
+	for (var i = 0; len > i; i++ ) {
+		this.addMarker(markers[i]);
+	}
+};
+StaticMaps.Hooks.registerDefaults('markers', StaticMaps.Marker.setDefaults);
+
 //Method of factory of generating marker
 StaticMaps.Marker.factory = function(props) {
-	if (typeOf(props) == 'object') new TypeError('The property of the marker is not an object.');
-	var properties = Object.subset(props, ['color', 'size', 'label', 'icon', 'shadow', 'point']);
+
+	var properties = Object.subset(props || {}, ['color', 'size', 'label', 'icon', 'shadow', 'point']);
 	for (var key in properties) {
-		if (properties[key] == undefined) {
-			delete properties[key];
+		if (properties.hasOwnProperty(key)) {
+			if (properties[key] == undefined) {
+				delete properties[key];
+			}
 		}
 	}
+
 	var marker = new StaticMaps.Marker(properties);
 	return marker;
 };
@@ -243,6 +274,6 @@ StaticMaps.Marker.toQueryString = function(markers) {
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMaps.Querys.registerQuery('markers', StaticMaps.Marker.toQueryString);
+StaticMaps.Hooks.registerQuery('markers', StaticMaps.Marker.toQueryString);
 
 }(document.id));
