@@ -42,7 +42,9 @@ var StaticMaps = this.StaticMaps = new Class({
 		this.setOptions(options);
 		var op = this.options;
 		for (var key in op) {
-			this[key] = op[key];
+			if (op.hasOwnProperty(key)) {
+				this[key] = op[key];
+			}
 		}
 	},
 
@@ -59,7 +61,7 @@ var StaticMaps = this.StaticMaps = new Class({
 
 	getImage: function(){
 		var img = new Element('img', { 'src': this.toQueryString() });
-		if (StaticMaps.Map != undefined){
+		if (StaticMaps.Map !== undefined){
 			var size = this.getSize();
 			img.setProperties(this.getSize());
 		}
@@ -75,11 +77,13 @@ var StaticMaps = this.StaticMaps = new Class({
 		var query = [];
 		var queryConverters = StaticMaps.Querys.getQueries();
 		for (var key in queryConverters) {
-			var property = this[key]; 
-			var converter = queryConverters[key];
-			var result = converter(property);
-			if (result != '') {
-				query.push(result);
+			if (queryConverters.hasOwnProperty(key)) {
+				var property = this[key]; 
+				var converter = queryConverters[key];
+				var result = converter(property);
+				if (result !== '') {
+					query.push(result);
+				}
 			}
 		}
 		var url = this.url + '?' + query.join('&');
@@ -89,7 +93,7 @@ var StaticMaps = this.StaticMaps = new Class({
 
 	factory: function(type, props){
 		var className = type.capitalize();
-		if (StaticMaps[className] == null || StaticMaps[className] == 'undefind') {
+		if (StaticMaps[className] === null || StaticMaps[className] === 'undefind') {
 			throw new TypeError('The class that was able to make it to the instance was not found');
 		}
 		return StaticMaps[className].factory(props);
