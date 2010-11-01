@@ -43,6 +43,14 @@ var StaticMaps = this.StaticMaps = new Class({
 		this._setDefaultValues();
 	},
 
+	_set: function(namespace, key, value){
+		this[namespace][key] = value;
+	},
+
+	_get: function(namespace, key){
+		return this[key];
+	},
+
 	setSensor: function(value) {
 		if (typeOf(value) != 'boolean') {
 			throw new TypeError('The data type is not boolean');
