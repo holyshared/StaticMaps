@@ -36,30 +36,36 @@ var StaticMaps = this.StaticMaps = new Class({
 
 	_url: 'http://maps.google.com/maps/api/staticmap',
 
-	sensor: false,
+	_sensor: false,
 
 	initialize: function(options){
 		this.setOptions(options);
 		this._setDefaultValues();
 	},
 
-	_set: function(namespace, key, value){
+	_set: function(property, value){
+		var property = property.split('.');
+		var namespace = property.shift();
+		var key = property.shift();
 		this[namespace][key] = value;
 	},
 
-	_get: function(namespace, key){
-		return this[key];
+	_get: function(property){
+		var property = property.split('.');
+		var namespace = property.shift();
+		var key = property.shift();
+		return this[namespace][key];
 	},
 
 	setSensor: function(value) {
-		if (typeOf(value) != 'boolean') {
+		if (!Type.isBoolean(value)) {
 			throw new TypeError('The data type is not boolean');
 		}
-		this.sensor = value;
+		this._sensor = value;
 	},
 
 	getSensor: function() {
-		return this.sensor;
+		return this._sensor;
 	},
 
 	_getImage: function(){
@@ -77,11 +83,12 @@ var StaticMaps = this.StaticMaps = new Class({
 	},
 
 	_setDefaultValues: function() {
-		var property = null, setter = null;
+		var property = null, optionKey = null, setter = null;
 		var defaultSetters = StaticMaps.Hooks.getDefaults();
 		for (var key in defaultSetters) {
 			if (defaultSetters.hasOwnProperty(key)) {
-				property = this.options[key];
+				optionKey = key.replace("_", "");
+				property = this.options[optionKey];
 				setter = defaultSetters[key].bind(this);
 				setter(property);
 			}
@@ -130,12 +137,12 @@ StaticMaps.Hooks = {
 	},
 
 	registerDefaults: function(key, fn) {
-		if (typeOf(fn) != 'function') return;
+		if (!Type.isFunction(fn)) return;
 		this.defaults[key] = fn;
 	},
 
 	registerQuery: function(key, fn) {
-		if (typeOf(fn) != 'function') return;
+		if (!Type.isFunction(fn)) return;
 		this.queries[key] = fn;
 	}
 

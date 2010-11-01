@@ -41,55 +41,39 @@ StaticMaps.implement({
 		}
 	},
 
-	position: {
+	_position: {
 		center: null,
 		zoom: null
 	},
 
 	setCenter: function(point){
-		switch(typeOf(point)) {
-			case 'object':
-				if (typeOf(point.lat) != 'number'
-				&& typeOf(point.lng) != 'number') {
-					throw new TypeError('The latitude longitude is not a numerical value');
-				}
-				break;
-			case 'string':
-				if (point.length <= 0) {
-					throw new TypeError('The name of a place is uncertain');
-				}
-				break;
-			default:
-				throw new TypeError('The data type at the position is a character string or not an object');
+		if (!this._isValidPoint(point)) {
+			throw new Error('The value of coordinates is an invalid value.');
 		}
-		this.position['center'] = point;
+		this._set('_position.center', point);
 		return this;
 	},
 
 	setZoom: function(zoom){
-		if (typeOf(zoom) != 'number') {
-			throw new TypeError('');
+		if (!this._isValidZoom(zoom)) {
+			throw new Error('The value at the zoom level is not an effective value.');
 		}
-		if (zoom < 0 || zoom > 21) {
-			throw new TypeError('');
-		}
-		this.position['zoom'] = zoom;
+		this._set('_position.zoom', zoom);
+		return this;
 	},
-
 
 	getCenter: function(){
-		return this.position['center'];
+		return this._get('_position.center');
 	},
 
-	getZoom: function(zoom){
-		return this.position['zoom'];
+	getZoom: function(){
+		return this._get('_position.zoom');
 	}
 
 });
 
 StaticMaps.Position = {};
 
-//The hook that sets an initial value is added. 
 StaticMaps.Position.setDefaults = function(props) {
 	var method = null, value = null;
 	for (var key in props) {
@@ -103,10 +87,7 @@ StaticMaps.Position.setDefaults = function(props) {
 		}
 	}
 };
-StaticMaps.Hooks.registerDefaults('position', StaticMaps.Position.setDefaults);
 
-
-//Method of class of converting two or more positions into url query.
 StaticMaps.Position.toQueryString = function(position) {
 	var query = [];
 	var center = position.center;
@@ -127,8 +108,7 @@ StaticMaps.Position.toQueryString = function(position) {
 	return query.join('&');
 };
 
-//It registers in the query conversion processing of StaticMap.
-//When the toQueryString method of StaticMap is called, this method is executed.
-StaticMaps.Hooks.registerQuery('position', StaticMaps.Position.toQueryString);
+StaticMaps.Hooks.registerDefaults('_position', StaticMaps.Position.setDefaults);
+StaticMaps.Hooks.registerQuery('_position', StaticMaps.Position.toQueryString);
 
 }(document.id));

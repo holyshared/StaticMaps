@@ -38,37 +38,35 @@ StaticMaps.implement({
 		markers: []
 	},
 
-	markers: [],
+	_markers: [],
 
 	addMarker: function(marker){
 		if (!instanceOf(marker, StaticMaps.Marker)) {
 			marker = new StaticMaps.Marker(marker);
 		}
-		this['markers'].push(marker);
+		this._markers.push(marker);
 	},
 
 	removeMarker: function(value){
 		var target = value;
-		if (typeOf(value) == 'number') {
-			if (this['markers'][value]) {
-				target = this['markers'][value]; 
+		if (Type.isNumber(value)) {
+			if (this._markers[value]) {
+				target = this._markers[value]; 
 			}
 		}
-		this['markers'].erase(target);
+		this._markers.erase(target);
 	}
 
 });
 
 StaticMaps.Marker = new Class({
 
-	props: {
-		color: null,
-		size: null,
-		label: null,
-	    icon: null,
-		shadow: true,
-		point: null
-	},
+	_color: null,
+	_size: null,
+	_label: null,
+	_icon: null,
+	_shadow: true,
+	_point: null,
 
 	initialize: function(props){
 		var properties = props = (props || {});
@@ -87,98 +85,87 @@ StaticMaps.Marker = new Class({
 	},
 
 	setColor: function(color) {
-		if (typeOf(color) != 'string') throw new TypeError('The color is not a character string');
-		if (StaticMaps.Marker.colors.indexOf(color) <= -1
-			&& !color.test(/^0x[A-Z0-9]{6}$/)) {
-			throw new TypeError('They are not curlers such as 24 bit color or black, brown, and green');
+		if (!this._isValidColor(color)) {
+			throw new Error('They are not curlers such as 24 bit color or black, brown, and green');
 		}
-		this.props['color'] = color;
+		this._color = color;
 		return this;
 	},
 
 	setLabel: function(label) {
-		if (typeOf(label) != 'string') throw new TypeError('The label is not a character string');
-		if (!label.test(/^[A-Z0-9]{1}$/)) {
-			throw new TypeError('It is not one character in the set of {A-Z, 0-9}');
+		if (!this._isValidLabel(label)) {
+			throw new Error('It is not one character in the set of {A-Z, 0-9}');
 		}
-		this.props['label'] = label;
+		this._label = label;
 		return this;
 	},
 
 	setSize: function(size) {
-		if (typeOf(size) != 'string') throw new TypeError('The size is not a character string');
-		if (StaticMaps.Marker.sizes.indexOf(size) <= - 1) {
-			throw new TypeError('The sizes are not either tiny, mid or small');
+		if (!this._isValidMarkerSize(size)) {
+			throw new Error('The sizes are not either tiny, mid or small');
 		}
-		this.props['size'] = size;
+		this._size = size;
 		return this;
 	},
 
 	setPoint: function(point) {
-		switch(typeOf(point)) {
-			case 'object':
-				if (typeOf(point.lat) != 'number'
-				&& typeOf(point.lng) != 'number') {
-					throw new TypeError('The latitude longitude is not a numerical value');
-				}
-				break;
-			case 'string':
-				if (point.length <= 0) {
-					throw new TypeError('The name of a place is uncertain');
-				}
-				break;
-			default:
-				throw new TypeError('The data type at the position is a character string or not an object');
+		if (!this._isValidPoint(point)) {
+			throw new Error('The coordinates position is invalid');
 		}
-		this.props['point'] = point;
+		this._point = point;
 		return this;
 	},
 
 	setIcon: function(url) {
-		if (typeOf(url) != 'string') throw new TypeError('The url is not a character string');
-		if (!url.test(/^(((ht|f)tp(s?))\:\/\/)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/)) {
-			throw new TypeError('It is not a format of url');
+		if (!this._isValidIcon(url)) {
+			throw new Error('It is invalid icon URL');
 		}
-		this.props['icon'] = url;
+		this._icon = url;
 		return this;
 	},
 
 	setShadow: function(value) {
-		if (typeOf(value) != 'boolean') {
+		if (!Type.isBoolean(value)) {
 			throw new TypeError('The data type is not boolean');
 		}
-		this.props['shadow'] = value;
+		this._shadow = value;
 		return this;
 	},
 
-	getProperties: function(props) {
-		return this.props;
+	getProperties: function() {
+		var props = {}, key = null;
+		var keys = StaticMaps.Marker.orderKeys;
+		for (var i = 0; i < keys.length; i++){
+			key = keys[i];
+			props[key] = this[key];
+		}
+		return props;
 	},
 
-	getColor: function(color) {
-		return this.props['color'];
+	getColor: function() {
+		return this._color;
 	},
 
-	getLabel: function(label) {
-		return this.props['label'];
+	getLabel: function() {
+		return this._label;
 	},
 
-	getSize: function(size) {
-		return this.props['size'];
+	getSize: function() {
+		return this._size;
 	},
 
-	getPoint: function(point) {
-		return this.props['point'];
+	getPoint: function() {
+		return this._point;
 	},
 
 	getIcon: function() {
-		return this.props['icon'];
+		return this._icon;
 	},
 
 	getShadow: function() {
-		return this.props['shadow'];
+		return this._shadow;
 	},
-
+/*
 	toObject: function() {
 		var object = {};
 		for (var key in this.props) {
@@ -190,25 +177,25 @@ StaticMaps.Marker = new Class({
 		}
 		return object;
 	},
-
+*/
 	toQueryString: function() {
 		var query = [];
 		var orderKeys = StaticMaps.Marker.orderKeys;
 		var l = StaticMaps.Marker.orderKeys.length;
 		for (var i = 0; i < l; i++) {
 			key = orderKeys[i];
-			value = this.props[key];
+			value = this[key];
 			if (value == null && value == undefined) continue;
 			switch(key) {
-				case 'point':
-					if (typeOf(value) == 'string') {
+				case '_point':
+					if (Type.isString(value)) {
 						query.push(encodeURIComponent(value));
 					} else {
 						query.push(value.lat + ',' + value.lng);
 					}
 					break;
 				default:
-					query.push(key + ':' + value);
+					query.push(key.replace('_', '') + ':' + value);
 					break;
 			}
 		}
@@ -217,26 +204,18 @@ StaticMaps.Marker = new Class({
 
 });
 
-//Size of marker
-StaticMaps.Marker.sizes = ['tiny', 'mid', 'small']; 
+StaticMaps.Marker.implement(new StaticMaps.Validater());
 
-//Color of marker
-StaticMaps.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white']; 
+StaticMaps.Marker.orderKeys = ['_color', '_size', '_label', '_icon', '_shadow', '_point'];
 
-StaticMaps.Marker.orderKeys = ['color', 'size', 'label', 'icon', 'shadow', 'point'];
-
-//The hook that sets an initial value is added. 
 StaticMaps.Marker.setDefaults = function(markers) {
 	var marker = null, len = markers.length;
 	for (var i = 0; len > i; i++ ) {
 		this.addMarker(markers[i]);
 	}
 };
-StaticMaps.Hooks.registerDefaults('markers', StaticMaps.Marker.setDefaults);
 
-//Method of factory of generating marker
 StaticMaps.Marker.factory = function(props) {
-
 	var properties = Object.subset(props || {}, ['color', 'size', 'label', 'icon', 'shadow', 'point']);
 	for (var key in properties) {
 		if (properties.hasOwnProperty(key)) {
@@ -245,12 +224,10 @@ StaticMaps.Marker.factory = function(props) {
 			}
 		}
 	}
-
 	var marker = new StaticMaps.Marker(properties);
 	return marker;
 };
 
-//Method of class of converting two or more markers into url query.
 StaticMaps.Marker.toQueryString = function(markers) {
 	var query = [], markerQuery = [];
 
@@ -272,8 +249,7 @@ StaticMaps.Marker.toQueryString = function(markers) {
 	return query.join('&');
 };
 
-//It registers in the query conversion processing of StaticMap.
-//When the toQueryString method of StaticMap is called, this method is executed.
-StaticMaps.Hooks.registerQuery('markers', StaticMaps.Marker.toQueryString);
+StaticMaps.Hooks.registerDefaults('_markers', StaticMaps.Marker.setDefaults);
+StaticMaps.Hooks.registerQuery('_markers', StaticMaps.Marker.toQueryString);
 
 }(document.id));

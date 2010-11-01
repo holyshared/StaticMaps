@@ -53,27 +53,37 @@ StaticMaps.implement({
 	},
 
 	setPathWeight: function(weight){
-		this._set(namespace, 'weight', weight);
+		if (!Type.isNumber(weight)){
+			throw new TypeError('');
+		}
+		this._set('_path.weight', weight);
 	},
 
 	setPathColor: function(color){
-		if (StaticMaps.Validaters.isValidColor(color)) {
-			this._set(namespace, 'color', color);
+		if (!this._isValidColor(color)){
+			throw new TypeError('');
 		}
+		this._set('_path.color', color);
 	},
 
 	setPathFillColor: function(color){
-		this._set(namespace, 'fillColor', color);
+		if (!this._isValidColor(color)){
+			throw new TypeError('');
+		}
+		this._set('_path.fillColor', color);
 	},
 
 	setPathPoints: function(points){
-		this._set(namespace, 'points', points);
+		this._set('_path.points', points);
 	},
 
 	addPathPoint: function(point){
-		var points = this._get('_path', 'points');
+		if (Type.isObject(point)) {
+			point = new StaticMaps.Point(point);
+		}
+		var points = this._get('_path.points');
 		points.push(point);
-		this._set(namespace, 'points', points);
+		this._set('_path.points', points);
 	}
 
 });
