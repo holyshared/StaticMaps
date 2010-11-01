@@ -13,3 +13,22 @@ h2 {
 	font-weight: normal;
 	margin-bottom: 10px;
 }
+
+dl {
+	margin-bottom: 15px;
+}
+
+dl dt {
+	float: left;
+	clear: both;
+	width: 80px;
+	margin-bottom: 5px;
+}
+
+dl dd {
+	margin-bottom: 5px;
+}
+
+abbr {
+	border: none;
+}

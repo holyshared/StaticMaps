@@ -22,7 +22,7 @@ requires:
   - Core/Class.Extras
   - Core/Element
 
-provides: [StaticMaps, StaticMaps.Querys]
+provides: [StaticMaps, StaticMaps.Hooks]
 ...
 */
 
@@ -34,16 +34,13 @@ var StaticMaps = this.StaticMaps = new Class({
 
 	options: {},
 
-	url: 'http://maps.google.com/maps/api/staticmap',
+	_url: 'http://maps.google.com/maps/api/staticmap',
 
 	sensor: false,
 
 	initialize: function(options){
 		this.setOptions(options);
-		var op = this.options;
-		for (var key in op) {
-			this[key] = op[key];
-		}
+		this._setDefaultValues();
 	},
 
 	setSensor: function(value) {
@@ -57,7 +54,7 @@ var StaticMaps = this.StaticMaps = new Class({
 		return this.sensor;
 	},
 
-	getImage: function(){
+	_getImage: function(){
 		var img = new Element('img', { 'src': this.toQueryString() });
 		if (StaticMaps.Map != undefined){
 			var size = this.getSize();
@@ -67,22 +64,36 @@ var StaticMaps = this.StaticMaps = new Class({
 	},
 
 	renderTo: function(element){
-		var img = this.getImage();
+		var img = this._getImage();
 		img.inject(element);
+	},
+
+	_setDefaultValues: function() {
+		var property = null, setter = null;
+		var defaultSetters = StaticMaps.Hooks.getDefaults();
+		for (var key in defaultSetters) {
+			if (defaultSetters.hasOwnProperty(key)) {
+				property = this.options[key];
+				setter = defaultSetters[key].bind(this);
+				setter(property);
+			}
+		}
 	},
 
 	toQueryString: function() {
 		var query = [];
-		var queryConverters = StaticMaps.Querys.getQueries();
+		var queryConverters = StaticMaps.Hooks.getQueries();
 		for (var key in queryConverters) {
-			var property = this[key]; 
-			var converter = queryConverters[key];
-			var result = converter(property);
-			if (result != '') {
-				query.push(result);
+			if (queryConverters.hasOwnProperty(key)) {
+				var property = this[key]; 
+				var converter = queryConverters[key];
+				var result = converter(property);
+				if (result != '') {
+					query.push(result);
+				}
 			}
 		}
-		var url = this.url + '?' + query.join('&');
+		var url = this._url + '?' + query.join('&');
 		url = url + '&sensor=' + this.getSensor();
 		return url;
 	},
@@ -97,19 +108,31 @@ var StaticMaps = this.StaticMaps = new Class({
 
 });
 
-StaticMaps.Querys = {
+StaticMaps.Hooks = {
 
+	defaults: {},
 	queries: {},
+
+	getDefaults: function() {
+		return this.defaults;
+	},
 
 	getQueries: function() {
 		return this.queries;
 	},
 
+	registerDefaults: function(key, fn) {
+		if (typeOf(fn) != 'function') return;
+		this.defaults[key] = fn;
+	},
+
 	registerQuery: function(key, fn) {
+		if (typeOf(fn) != 'function') return;
 		this.queries[key] = fn;
 	}
 
 };
+
 
 }(document.id));
 
@@ -136,8 +159,8 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMaps/StaticMaps
-  - StaticMaps/StaticMaps.Position
+  - StaticMaps
+  - StaticMaps.Position
 
 provides: [StaticMaps.Map]
 ...
@@ -258,18 +281,44 @@ StaticMaps.Map.languages = [
 	'wo','xh','yo','zh','zu'
 ];
 
+//The hook that sets an initial value is added. 
+StaticMaps.Map.setDefaults = function(props) {
+	var method = null, value = null;
+	for (var key in props) {
+		method = key.capitalize();
+		value = props[key];
+		if (value === null || value === undefined) continue;
+		if (props.hasOwnProperty(key)) {
+			switch (key) {
+				case 'size':
+					this.setSize(value.width, value.height);
+					break;
+				case 'maptype':
+					this.setMapType(value);
+					break;
+				default:
+					this["set" + method](value);
+					break;
+			}
+		}
+	}
+};
+StaticMaps.Hooks.registerDefaults('map', StaticMaps.Map.setDefaults);
+
 //Method of class of converting two or more map into url query.
 StaticMaps.Map.toQueryString = function(map) {
 	var query = [], value = null;
 	for (var key in map) {
-		value = map[key];
-		if (value == null && value == undefined) continue;
-		switch(key) {
-			case 'size':
-				query.push(key + '=' + value.width + 'x' + value.height);
-				break;
-			default:
-				query.push(key + '=' + value);
+		if (map.hasOwnProperty(key)) {
+			value = map[key];
+			if (value == null && value == undefined) continue;
+			switch (key) {
+				case 'size':
+					query.push(key + '=' + value.width + 'x' + value.height);
+					break;
+				default:
+					query.push(key + '=' + value);
+			}
 		}
 	}
 	return query.join('&');
@@ -277,7 +326,7 @@ StaticMaps.Map.toQueryString = function(map) {
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMaps.Querys.registerQuery('map', StaticMaps.Map.toQueryString);
+StaticMaps.Hooks.registerQuery('map', StaticMaps.Map.toQueryString);
 
 }(document.id));
 
@@ -304,10 +353,10 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
-  - StaticMaps/StaticMaps
-  - StaticMaps/StaticMaps.Map
+  - StaticMaps
+  - StaticMaps.Map
 
-provides: [StaticMap.Position]
+provides: [StaticMaps.Position]
 ...
 */
 
@@ -318,13 +367,13 @@ var StaticMaps = (this.StaticMaps || {});
 StaticMaps.implement({
 
 	options: {
-		positions: {
+		position: {
 			center: null,
 			zoom: null
 		}
 	},
 
-	positions: {
+	position: {
 		center: null,
 		zoom: null
 	},
@@ -345,7 +394,7 @@ StaticMaps.implement({
 			default:
 				throw new TypeError('The data type at the position is a character string or not an object');
 		}
-		this.positions['center'] = point;
+		this.position['center'] = point;
 		return this;
 	},
 
@@ -356,26 +405,43 @@ StaticMaps.implement({
 		if (zoom < 0 || zoom > 21) {
 			throw new TypeError('');
 		}
-		this.positions['zoom'] = zoom;
+		this.position['zoom'] = zoom;
 	},
 
 
 	getCenter: function(){
-		return this.positions['center'];
+		return this.position['center'];
 	},
 
 	getZoom: function(zoom){
-		return this.positions['zoom'];
+		return this.position['zoom'];
 	}
 
 });
 
 StaticMaps.Position = {};
 
+//The hook that sets an initial value is added. 
+StaticMaps.Position.setDefaults = function(props) {
+	var method = null, value = null;
+	for (var key in props) {
+		if (props.hasOwnProperty(key)) {
+			method = key.capitalize();
+			value = props[key];
+			if (value === null || value === undefined) continue;
+			if (props.hasOwnProperty(key)) {
+				this["set" + method](value);
+			}
+		}
+	}
+};
+StaticMaps.Hooks.registerDefaults('position', StaticMaps.Position.setDefaults);
+
+
 //Method of class of converting two or more positions into url query.
-StaticMaps.Position.toQueryString = function(positions) {
+StaticMaps.Position.toQueryString = function(position) {
 	var query = [];
-	var center = positions.center;
+	var center = position.center;
 	if (center) {
 		switch(typeOf(center)) {
 			case 'string':
@@ -387,15 +453,15 @@ StaticMaps.Position.toQueryString = function(positions) {
 		}
 	}
 
-	if (positions.zoom) {
-		query.push('zoom=' + positions.zoom);
+	if (position.zoom) {
+		query.push('zoom=' + position.zoom);
 	}
 	return query.join('&');
 };
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMaps.Querys.registerQuery('positions', StaticMaps.Position.toQueryString);
+StaticMaps.Hooks.registerQuery('position', StaticMaps.Position.toQueryString);
 
 }(document.id));
 
@@ -446,6 +512,16 @@ StaticMaps.implement({
 			marker = new StaticMaps.Marker(marker);
 		}
 		this['markers'].push(marker);
+	},
+
+	removeMarker: function(value){
+		var target = value;
+		if (typeOf(value) == 'number') {
+			if (this['markers'][value]) {
+				target = this['markers'][value]; 
+			}
+		}
+		this['markers'].erase(target);
 	}
 
 });
@@ -462,15 +538,18 @@ StaticMaps.Marker = new Class({
 	},
 
 	initialize: function(props){
-		this.setProperties(props);
+		var properties = props = (props || {});
+		this.setProperties(properties);
 	},
 
 	setProperties: function(props) {
 		var method = null, value = null;
 		for (var key in props) {
-			method = key.capitalize();
-			value = props[key];
-			this["set" + method](value);
+			if (props.hasOwnProperty(key)) {
+				method = key.capitalize();
+				value = props[key];
+				this["set" + method](value);
+			}
 		}
 	},
 
@@ -539,6 +618,10 @@ StaticMaps.Marker = new Class({
 		return this;
 	},
 
+	getProperties: function(props) {
+		return this.props;
+	},
+
 	getColor: function(color) {
 		return this.props['color'];
 	},
@@ -566,9 +649,11 @@ StaticMaps.Marker = new Class({
 	toObject: function() {
 		var object = {};
 		for (var key in this.props) {
-			value = this.props[key];
-			if (value == null && value == undefined) continue;
-			object[key] = value;
+			if (this.props.hasOwnProperty(key)) {
+				value = this.props[key];
+				if (value == null && value == undefined) continue;
+				object[key] = value;
+			}
 		}
 		return object;
 	},
@@ -607,15 +692,27 @@ StaticMaps.Marker.colors = ['black', 'brown', 'green', 'purple', 'yellow', 'blue
 
 StaticMaps.Marker.orderKeys = ['color', 'size', 'label', 'icon', 'shadow', 'point'];
 
+//The hook that sets an initial value is added. 
+StaticMaps.Marker.setDefaults = function(markers) {
+	var marker = null, len = markers.length;
+	for (var i = 0; len > i; i++ ) {
+		this.addMarker(markers[i]);
+	}
+};
+StaticMaps.Hooks.registerDefaults('markers', StaticMaps.Marker.setDefaults);
+
 //Method of factory of generating marker
 StaticMaps.Marker.factory = function(props) {
-	if (typeOf(props) == 'object') new TypeError('The property of the marker is not an object.');
-	var properties = Object.subset(props, ['color', 'size', 'label', 'icon', 'shadow', 'point']);
+
+	var properties = Object.subset(props || {}, ['color', 'size', 'label', 'icon', 'shadow', 'point']);
 	for (var key in properties) {
-		if (properties[key] == undefined) {
-			delete properties[key];
+		if (properties.hasOwnProperty(key)) {
+			if (properties[key] == undefined) {
+				delete properties[key];
+			}
 		}
 	}
+
 	var marker = new StaticMaps.Marker(properties);
 	return marker;
 };
@@ -644,6 +741,6 @@ StaticMaps.Marker.toQueryString = function(markers) {
 
 //It registers in the query conversion processing of StaticMap.
 //When the toQueryString method of StaticMap is called, this method is executed.
-StaticMaps.Querys.registerQuery('markers', StaticMaps.Marker.toQueryString);
+StaticMaps.Hooks.registerQuery('markers', StaticMaps.Marker.toQueryString);
 
 }(document.id));
