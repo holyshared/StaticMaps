@@ -30,8 +30,6 @@ provides: [StaticMaps.Path]
 
 (function($){
 
-var namespace = '_path';
-
 var StaticMaps = (this.StaticMaps || {});
 
 StaticMaps.implement({

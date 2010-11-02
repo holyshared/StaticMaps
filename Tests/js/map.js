@@ -2,20 +2,31 @@
 
 	var map = new StaticMaps();
 
-	//Size setter/getter
-	var size = Function.attempt(function(){
-		map.setSize(null);
-		return false;
-	}, function(){
-		map.setSize(0, 0);
-		return false;
-	}, function(){
-		map.setSize(100, 100);
-		var size = map.getSize();
-		return (size.width == 100 && size.height == 100);
+	var sizeTest = [];
+	sizeTest.append([
+	    function(){
+			map.setSize('600x600');
+			var size = map.getSize();
+			return (size != '600x600');
+	    },
+	    function(){
+			map.setSize(0, 0);
+			var size = map.getSize();
+			return (size.width != 0 && size.height != 0);
+	    },
+	    function(){
+			map.setSize(100, 100);
+			var size = map.getSize();
+			return (size.width == 100 && size.height == 100);
+	    }
+	]);
+	var size = sizeTest.some(function(tester, index){
+		return (tester() == false);
 	});
-	(size) ? console.log('size getter/setter success') : console.log('size getter/setter failure');
+	(size) ? console.log('size getter/setter failure') : console.log('size getter/setter success');
 
+	
+	
 	//Format setter/getter
 	var format = Function.attempt(function(){
 		map.setFormat(null);
@@ -73,7 +84,6 @@
 		return (language == 'en');
 	});
 	(language) ? console.log('language getter/setter success') : console.log('language getter/setter failure');
-
 
 	window.addEvent('domready', function(){
 		var map = new StaticMaps({

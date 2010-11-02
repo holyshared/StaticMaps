@@ -55,43 +55,38 @@ StaticMaps.implement({
 		language: null
 	},
 
-	setSize: function(width, height) {
-		if (!this._isValidMapSize(width, height)) {
-			throw new Error('The size is an invalid size.');
+	_validaters: {
+		_map: {
+			size: 'mapSize',
+			format: 'format',
+			maptype: 'mapType',
+			mobile: 'boolean',
+			language: 'language'
 		}
+	},
+
+	setSize: function(width, height) {
 		var size = { width: width, height: height };
 		this._set('_map.size', size);
 		return this;
 	},
 
 	setFormat: function(format) {
-		if (!this._isValidFormat(format)) {
-			throw new Error('Png, jpg, and gif, etc. can be specified for an image format');
-		}
 		this._set('_map.format', format);
 		return this;
 	},
 
 	setMapType: function(maptype) {
-		if (!this._isValidMapType(maptype)) {
-			throw new Error('Please specify either roadmap, satellite, terrain or hybrid for a type in the map');
-		}
 		this._set('_map.maptype', maptype);
 		return this;
 	},
 
 	setMobile: function(mobile) {
-		if (!Type.isBoolean(mobile)) {
-			throw new Error('The data type is not boolean');
-		}
 		this._set('_map.mobile', mobile);
 		return this;
 	},
 
 	setLanguage: function(language) {
-		if (!this._isValidLanguage(language)) {
-			throw new Error("The specified language doesn't correspond");
-		}
 		this._set('_map.language', language);
 		return this;
 	},

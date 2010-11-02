@@ -34,27 +34,36 @@ var StaticMaps = this.StaticMaps = new Class({
 
 	options: {},
 
+	_validaters: {},
+
 	_url: 'http://maps.google.com/maps/api/staticmap',
 
 	_sensor: false,
 
 	initialize: function(options){
 		this.setOptions(options);
+		this.validater = new StaticMaps.Validater(); 
 		this._setDefaultValues();
 	},
 
 	_set: function(property, value){
 		var property = property.split('.');
-		var namespace = property.shift();
+		var ns = property.shift();
 		var key = property.shift();
-		this[namespace][key] = value;
+
+		var vn = this._validaters[ns][key];
+		vn = vn.capitalize();
+
+		if (this.validater['isValid' + vn](value)) {
+			this[ns][key] = value;
+		}
 	},
 
 	_get: function(property){
 		var property = property.split('.');
-		var namespace = property.shift();
+		var ns = property.shift();
 		var key = property.shift();
-		return this[namespace][key];
+		return this[ns][key];
 	},
 
 	setSensor: function(value) {

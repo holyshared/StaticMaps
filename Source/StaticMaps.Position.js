@@ -46,18 +46,19 @@ StaticMaps.implement({
 		zoom: null
 	},
 
-	setCenter: function(point){
-		if (!this._isValidPoint(point)) {
-			throw new Error('The value of coordinates is an invalid value.');
+	_validaters: {
+		_position: {
+			center: 'point',
+			zoom: 'zoom'
 		}
+	},
+
+	setCenter: function(point){
 		this._set('_position.center', point);
 		return this;
 	},
 
 	setZoom: function(zoom){
-		if (!this._isValidZoom(zoom)) {
-			throw new Error('The value at the zoom level is not an effective value.');
-		}
 		this._set('_position.zoom', zoom);
 		return this;
 	},

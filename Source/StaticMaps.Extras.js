@@ -102,50 +102,51 @@ StaticMaps.Validater = new Class({
 
 	_colors: ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white'],
 
-	_isValidMapSize: function(width, height){
-		if (!(Type.isNumber(width) && Type.isNumber(height))
-			|| (width <= 0 || height <= 0)) {
+	isValidMapSize: function(size){
+		if (!Type.isObject(size)) return false;
+		if (!(Type.isNumber(size.width) && Type.isNumber(size.height))
+			|| (size.width <= 0 || size.height <= 0)) {
 			return false;
 		}
 		return true;
 	},
 
-	_isValidMarkerSize: function(value){
+	isValidMarkerSize: function(value){
 		if (this._markerSizes.indexOf(value) <= -1 ) {
 			return false;
 		}
 		return true;
 	},
 
-	_isValidLabel: function(label){
+	isValidLabel: function(label){
 		if (!Type.isString(label) || !label.test(/^[A-Z0-9]{1}$/)) {
 			return false;
 		}
 		return true;
 	},
 
-	_isValidFormat: function(value){
+	isValidFormat: function(value){
 		if (this._formats.indexOf(value) <= -1 ) {
 			return false;
 		}
 		return true;
 	},
 
-	_isValidMapType: function(value){
+	isValidMapType: function(value){
 		if (this._mapTypes.indexOf(value) <= -1 ) {
 			return false;
 		}
 		return true;
 	},
 
-	_isValidLanguage: function(value){
+	isValidLanguage: function(value){
 		if (this._languages.indexOf(value) <= -1 ) {
 			return false;
 		}
 		return true;
 	},
 
-	_isValidColor: function(value){
+	isValidColor: function(value){
 		if (!Type.isString(value)) return false;
 		if (!value.test(/^0x[A-Z0-9]{6}$/) && this._colors.indexOf(value) <= -1) {
 			return false;
@@ -153,7 +154,7 @@ StaticMaps.Validater = new Class({
 		return true;
 	},
 
-	_isValidPoint: function(value){
+	isValidPoint: function(value){
 		switch(typeOf(value)) {
 			case 'object':
 				if (!Type.isNumber(value.lat)
@@ -173,7 +174,7 @@ StaticMaps.Validater = new Class({
 		return true;
 	},
 
-	_isValidIcon: function(url){
+	isValidIcon: function(url){
 		if (!Type.isString(url)) return false;
 		if (!url.test(/^(((ht|f)tp(s?))\:\/\/)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/)) {
 			return false;
@@ -181,7 +182,7 @@ StaticMaps.Validater = new Class({
 		return true;
 	},
 
-	_isValidZoom: function(value){
+	isValidZoom: function(value){
 		if (!Type.isNumber(value)) return false;
 		if (value < 0 || value > 21) return false;
 		return true;
@@ -189,6 +190,14 @@ StaticMaps.Validater = new Class({
 
 });
 
-StaticMaps.implement(new StaticMaps.Validater());
+StaticMaps.Validater.implement({
+	isValidBoolean: Type.isBoolean
+});
+
+
+//StaticMaps.Validater.isValidBoolean.alias('isValidBoolean', 'Type.isBoolean');
+
+
+//StaticMaps.implement(new StaticMaps.Validater());
 
 }(document.id));
