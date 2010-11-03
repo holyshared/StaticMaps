@@ -32,7 +32,7 @@ provides: [StaticMaps.Position]
 
 var StaticMaps = (this.StaticMaps || {});
 
-StaticMaps.implement({
+var options = {
 
 	options: {
 		position: {
@@ -51,27 +51,57 @@ StaticMaps.implement({
 			center: 'point',
 			zoom: 'zoom'
 		}
-	},
-
-	setCenter: function(point){
-		this._set('_position.center', point);
-		return this;
-	},
-
-	setZoom: function(zoom){
-		this._set('_position.zoom', zoom);
-		return this;
-	},
-
-	getCenter: function(){
-		return this._get('_position.center');
-	},
-
-	getZoom: function(){
-		return this._get('_position.zoom');
 	}
 
+};
+
+['center', 'zoom'].each(function(name){
+	var propertyName = '_position.' + name;
+	var getterName = 'get' + name.capitalize();
+	var setterName = 'set' + name.capitalize();
+
+	options[getterName] = function() {
+		var value = this._get(propertyName);
+		return value;
+	};
+
+	options[setterName] = function() {
+		var args = [propertyName].append(Array.from(arguments));
+		this._set.apply(this, args);
+		return this;
+	};
+
 });
+/*
+['center', 'zoom'].each(function(name){
+	var propertyName = '_position.' + name;
+	var setterName = 'set' + name.capitalize();
+	options[setterName] = function() {
+		var args = [propertyName].append(Array.from(arguments));
+		this._set.apply(this, args);
+		return this;
+	};
+});
+*/
+
+
+
+
+
+StaticMaps.implement(options);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 StaticMaps.Position = {};
 
