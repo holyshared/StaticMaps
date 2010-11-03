@@ -26,64 +26,110 @@
 	(size) ? console.log('size getter/setter failure') : console.log('size getter/setter success');
 
 	
-	
-	//Format setter/getter
-	var format = Function.attempt(function(){
-		map.setFormat(null);
-		return false;
-	}, function(){
-		map.setFormat('ai');
-		return false;
-	}, function(){
-		map.setFormat('png');
-		var format = map.getFormat();
-		return (format == 'png');
+	var formatTest = [];
+	formatTest.append([
+		function(){
+			map.setFormat('unkownformat');
+			var format = map.getFormat();
+			return (format != 'unkownformat');
+		},
+		function(){
+			map.setFormat('ai');
+			var format = map.getFormat();
+			return (format != 'ai');
+		},
+		function(){
+			map.setFormat('png');
+			var format = map.getFormat();
+			return (format == 'png');
+		}
+	]);
+	var format = formatTest.some(function(tester, index){
+		return (tester() == false);
 	});
-	(format) ? console.log('format getter/setter success') : console.log('format getter/setter failure');
+	(format) ? console.log('format getter/setter failure') : console.log('format getter/setter success');
 
-	//MapType setter/getter
-	var maptype = Function.attempt(function(){
-		map.setMapType(null);
-		return false;
-	}, function(){
-		map.setMapType('blank');
-		return false;
-	}, function(){
-		map.setMapType('roadmap');
-		var maptype = map.getMapType();
-		return (maptype == 'roadmap');
+
+	var maptypeTest = [];
+	maptypeTest.append([
+		function(){
+			map.setMapType('unkownMapTYpe');
+			var mapType = map.getMapType();
+			return (mapType != 'unkownMapTYpe');
+		},
+		function(){
+			var o = {foo:'bar'};
+			map.setMapType(o);
+			var mapType = map.getMapType();
+			return (mapType != o);
+		},
+		function(){
+			map.setMapType('roadmap');
+			var mapType = map.getMapType();
+			return (mapType == 'roadmap');
+		}
+	]);
+	var maptype = maptypeTest.some(function(tester, index){
+		return (tester() == false);
 	});
-	(maptype) ? console.log('maptype getter/setter success') : console.log('maptype getter/setter failure');
+	(maptype) ? console.log('mapType getter/setter failure') : console.log('mapType getter/setter success');
 
 
-	//Mobile setter/getter
-	var mobile = Function.attempt(function(){
-		map.setMobile(null);
-		return false;
-	}, function(){
-		map.setMobile('pc');
-		return false;
-	}, function(){
-		map.setMobile(true);
-		var mobile = map.getMobile();
-		return (mobile == true);
+
+
+	var mobileTest = [];
+	mobileTest.append([
+		function(){
+			map.setMobile('unkown');
+			var mobile = map.getMobile();
+			return (mobile != 'unkown');
+		},
+		function(){
+			var o = {foo:'bar'};
+			map.setMobile(o);
+			var mobile = map.getMobile();
+			return (mobile != o);
+		},
+		function(){
+			map.setMobile(true);
+			var mobile = map.getMobile();
+			return (mobile == true);
+		}
+	]);
+	var mobile = maptypeTest.some(function(tester, index){
+		return (tester() == false);
 	});
-	(mobile) ? console.log('mobile getter/setter success') : console.log('mobile getter/setter failure');
+	(mobile) ? console.log('mobile getter/setter failure') : console.log('mobile getter/setter success');
 
 
-	//Language setter/getter
-	var language = Function.attempt(function(){
-		map.setLanguage(null);
-		return false;
-	}, function(){
-		map.setLanguage('java');
-		return false;
-	}, function(){
-		map.setLanguage('en');
-		var language = map.getLanguage();
-		return (language == 'en');
+
+
+	var languageTest = [];
+	languageTest.append([
+		function(){
+			map.setLanguage('unkown');
+			var language = map.getLanguage();
+			return (language != 'unkown');
+		},
+		function(){
+			var o = {foo:'bar'};
+			map.setLanguage(o);
+			var language = map.getLanguage();
+			return (language != o);
+		},
+		function(){
+			map.setLanguage('en');
+			var language = map.getLanguage();
+			return (language == 'en');
+		}
+	]);
+	var language = languageTest.some(function(tester, index){
+		return (tester() == false);
 	});
-	(language) ? console.log('language getter/setter success') : console.log('language getter/setter failure');
+	(language) ? console.log('language getter/setter failure') : console.log('language getter/setter success');
+
+
+
 
 	window.addEvent('domready', function(){
 		var map = new StaticMaps({
@@ -97,7 +143,7 @@
 			map: {
 				size: { width: 600, height: 300 },
 				format: 'png8',
-				maptype: 'hybrid',
+				mapType: 'hybrid',
 				mobile: true,
 				language: 'en'
 			}
@@ -120,5 +166,6 @@
 		map.setCenter(center).setZoom(15);
 		map.renderTo($('staticMap1'));
 	});
+
 
 }(document.id));

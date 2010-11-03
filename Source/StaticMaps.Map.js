@@ -32,7 +32,7 @@ provides: [StaticMaps.Map]
 
 var StaticMaps = (this.StaticMaps || {});
 
-StaticMaps.implement({
+var options = {
 
 	options: {
 		map: {
@@ -41,7 +41,7 @@ StaticMaps.implement({
 				height: 600
 			},
 			format: null,
-			maptype: null,
+			mapType: null,
 			mobile: null,
 			language: null
 		}
@@ -50,7 +50,7 @@ StaticMaps.implement({
 	_map: {
 		size: null,
 		format: null,
-		maptype: null,
+		mapType: null,
 		mobile: null,
 		language: null
 	},
@@ -59,7 +59,7 @@ StaticMaps.implement({
 		_map: {
 			size: 'mapSize',
 			format: 'format',
-			maptype: 'mapType',
+			mapType: 'mapType',
 			mobile: 'boolean',
 			language: 'language'
 		}
@@ -69,49 +69,30 @@ StaticMaps.implement({
 		var size = { width: width, height: height };
 		this._set('_map.size', size);
 		return this;
-	},
-
-	setFormat: function(format) {
-		this._set('_map.format', format);
-		return this;
-	},
-
-	setMapType: function(maptype) {
-		this._set('_map.maptype', maptype);
-		return this;
-	},
-
-	setMobile: function(mobile) {
-		this._set('_map.mobile', mobile);
-		return this;
-	},
-
-	setLanguage: function(language) {
-		this._set('_map.language', language);
-		return this;
-	},
-
-	getSize: function() {
-		return this._get('_map.size');
-	},
-
-	getFormat: function() {
-		return this._get('_map.format');
-	},
-
-	getMapType: function() {
-		return this._get('_map.maptype');
-	},
-
-	getMobile: function() {
-		return this._get('_map.mobile');
-	},
-
-	getLanguage: function() {
-		return this._get('_map.language');
 	}
 
+};
+
+['size', 'format', 'mapType', 'mobile', 'language'].each(function(name){
+	var propertyName = '_map.' + name;
+	var getterName = 'get' + name.capitalize();
+	options[getterName] = function() {
+		var value = this._get(propertyName);
+		return value;
+	};
 });
+
+['format', 'mapType', 'mobile', 'language'].each(function(name){
+	var propertyName = '_map.' + name;
+	var setterName = 'set' + name.capitalize();
+	options[setterName] = function() {
+		var args = [propertyName].append(Array.from(arguments));
+		this._set.apply(this, args);
+		return this;
+	};
+});
+
+StaticMaps.implement(options);
 
 StaticMaps.Map = {};
 
@@ -126,7 +107,7 @@ StaticMaps.Map.setDefaults = function(props) {
 				case 'size':
 					this.setSize(value.width, value.height);
 					break;
-				case 'maptype':
+				case 'mapType':
 					this.setMapType(value);
 					break;
 				default:
@@ -138,17 +119,18 @@ StaticMaps.Map.setDefaults = function(props) {
 };
 
 StaticMaps.Map.toQueryString = function(map) {
-	var query = [], value = null;
+	var query = [], value = null, queryKey = null;
 	for (var key in map) {
 		if (map.hasOwnProperty(key)) {
-			value = map[key];
-			if (value == null && value == undefined) continue;
+			queryValue = map[key];
+			queryKey = key.toLowerCase();
+			if (queryValue == null && queryValue == undefined) continue;
 			switch (key) {
 				case 'size':
-					query.push(key + '=' + value.width + 'x' + value.height);
+					query.push(queryKey + '=' + queryValue.width + 'x' + queryValue.height);
 					break;
 				default:
-					query.push(key + '=' + value);
+					query.push(queryKey + '=' + queryValue);
 			}
 		}
 	}
