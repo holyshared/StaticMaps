@@ -17,6 +17,7 @@ sources:
   - "Source/StaticMaps.Position.js"
   - "Source/StaticMaps.Map.js"
   - "Source/StaticMaps.Marker.js"
+  - "Source/StaticMaps.Path.js"
 
 author: holyshared
 
@@ -26,4 +27,4 @@ tags: [map, google, static, version2, static maps]
 
 demo: http://holyshared.github.com/StaticMaps/
 
-current: 0.1.1
+current: 0.2

@@ -1,6 +1,9 @@
 STATICMAPS CHANGELOG
 =============================
 
+version 0.2
+
+
 version 0.1.1
 * The file header is corrected.
 * The bug to which the value specified in the option is not applied is corrected. 
