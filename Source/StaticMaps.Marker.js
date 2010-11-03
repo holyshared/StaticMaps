@@ -70,13 +70,12 @@ StaticMaps.Marker = new Class({
 
 	initialize: function(props){
 		var properties = props = (props || {});
-		this.validater = new StaticMaps.Validater();
 		this.setProperties(properties);
 	},
 
 	_set: function(key, value){
 		var vn = StaticMaps.Marker.validaters[key];
-		if (this.validater['isValid' + vn.capitalize()](value)) {
+		if (StaticMaps.Validater['isValid' + vn.capitalize()](value)) {
 			this[key] = value;
 		}
 	},
@@ -108,7 +107,7 @@ StaticMaps.Marker = new Class({
 	},
 
 	toQueryString: function() {
-		var query = [];
+		var query = [], key = null, value = null;
 		var orderKeys = StaticMaps.Marker.orderKeys;
 		var l = StaticMaps.Marker.orderKeys.length;
 		for (var i = 0; i < l; i++) {

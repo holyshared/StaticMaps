@@ -23,7 +23,6 @@ It is possible to use it by adding *StaticMaps.Position*.
 * getCenter
 * getZoom
 
-
 #### Function concerning map.
  
 It is possible to use it by adding *StaticMaps.Map*.
@@ -49,8 +48,7 @@ It is possible to use it by adding *StaticMaps.Marker*.
 ##### StaticMaps.Marker
 
 * addMarker 
-
-
+* removeMarker 
 
 #### Function concerning path.
 
@@ -68,7 +66,6 @@ It is possible to use it by adding *StaticMaps.Marker*.
 * addPathPoints
 * removePathPoint
 * removePathPoints
-
 
 ### StaticMaps.Hooks
 

@@ -50,43 +50,74 @@ StaticMaps.implement({
 		points: []
 	},
 
-	setPathWeight: function(weight){
-		if (!Type.isNumber(weight)){
-			throw new TypeError('');
+	_validaters: {
+		_path: {
+			weight: 'number',
+			color: 'color',
+			fillColor: 'color'
 		}
-		this._set('_path.weight', weight);
-	},
-
-	setPathColor: function(color){
-		if (!this._isValidColor(color)){
-			throw new TypeError('');
-		}
-		this._set('_path.color', color);
-	},
-
-	setPathFillColor: function(color){
-		if (!this._isValidColor(color)){
-			throw new TypeError('');
-		}
-		this._set('_path.fillColor', color);
-	},
-
-	setPathPoints: function(points){
-		this._set('_path.points', points);
 	},
 
 	addPathPoint: function(point){
-		if (Type.isObject(point)) {
+		if (!instanceOf(point, StaticMaps.Point)) {
+			if (!StaticMaps.Validater['isValidPoint'](point)) {
+				return;
+			}
 			point = new StaticMaps.Point(point);
 		}
 		var points = this._get('_path.points');
 		points.push(point);
-		this._set('_path.points', points);
+		return point;
+	},
+
+	addPathPoints: function(points){
+		var points = [];
+		var points = this._get('_path.points');
+		for (var i = 0; i < points.length; i++){
+			var newPoint = this.addPathPoint(points[i]);
+			if (!newPoint) continue;
+			points.push(newPoint);
+		}
+		return points;
+	},
+
+	removePathPoint: function(point){
+		var points = this._get('_path.points');
+		points.erase(point);
+	},
+
+	removePathPoints: function(points){
+		points = points || this._get('_path.points');
+		for (var i = 0; i < points.length; i++){
+			this.removePathPoint(points[i]);
+		}
 	}
 
 });
 
+var options = {};
+['weight', 'color', 'fillColor'].each(function(name){
+	var propertyName = '_path.' + name;
+	var getterName = 'getPath' + name.capitalize();
+	var setterName = 'setPath' + name.capitalize();
+
+	options[getterName] = function() {
+		var value = this._get(propertyName);
+		return value;
+	};
+
+	options[setterName] = function() {
+		var args = [propertyName].append(Array.from(arguments));
+		this._set.apply(this, args);
+		return this;
+	};
+
+});
+StaticMaps.implement(options);
+
 StaticMaps.Path = {};
+
+StaticMaps.Path.orderKeys = ['weight', 'color', 'fillColor', 'points'];
 
 StaticMaps.Path.setDefaults = function(path) {
 	var method = null, value = null;
@@ -94,23 +125,33 @@ StaticMaps.Path.setDefaults = function(path) {
 		value = path[key];
 		if (path.hasOwnProperty(key)) {
 			method = key.capitalize();
-			this['setPath' + method](value);
+			switch(key) {
+				case 'points':
+					this['addPath' + method](value);
+					break;
+				default:
+				this['setPath' + method](value);
+			}
 		}
 	}
 };
 
 StaticMaps.Path.toQueryString = function(path) {
-	var query = [], value = null, point = null;
-	for (var key in path){
+	var query = [], key = null, value = null;
+	var orderKeys = StaticMaps.Path.orderKeys;
+	var l = orderKeys.length;
+	for (var i = 0; i < l; i++) {
+		key = orderKeys[i];
 		value = path[key];
+		if (value == null && value == undefined) continue;
 		switch(key) {
 			case 'points':
-				for (var i = 0; i < value.length; i++) {
-					query.push(value[i].toString());
+				for (var j = 0; j < value.length; j++) {
+					query.push(value[j].toString());
 				}
 				break;
 			default:
-				query.push(key + ":" + value);
+				query.push(key.toLowerCase() + ":" + value);
 				break;
 		}
 	}

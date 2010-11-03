@@ -43,7 +43,8 @@ StaticMaps.implement({
 			format: null,
 			mapType: null,
 			mobile: null,
-			language: null
+			language: null,
+			sensor: false
 		}
 	},
 
@@ -52,7 +53,8 @@ StaticMaps.implement({
 		format: null,
 		mapType: null,
 		mobile: null,
-		language: null
+		language: null,
+		sensor: false
 	},
 
 	_validaters: {
@@ -61,7 +63,8 @@ StaticMaps.implement({
 			format: 'format',
 			mapType: 'mapType',
 			mobile: 'boolean',
-			language: 'language'
+			language: 'language',
+			sensor: 'boolean'
 		}
 	},
 
@@ -74,7 +77,7 @@ StaticMaps.implement({
 });
 
 var options = {};
-['size', 'format', 'mapType', 'mobile', 'language'].each(function(name){
+['size', 'format', 'mapType', 'mobile', 'language', 'sensor'].each(function(name){
 	var propertyName = '_map.' + name;
 	var getterName = 'get' + name.capitalize();
 	options[getterName] = function() {
@@ -83,7 +86,7 @@ var options = {};
 	};
 });
 
-['format', 'mapType', 'mobile', 'language'].each(function(name){
+['format', 'mapType', 'mobile', 'language', 'sensor'].each(function(name){
 	var propertyName = '_map.' + name;
 	var setterName = 'set' + name.capitalize();
 	options[setterName] = function() {

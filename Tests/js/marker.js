@@ -173,7 +173,7 @@
 	//QueryString
 	map.addMarker(marker);
 
-	var testURL = 'http://maps.google.com/maps/api/staticmap?size=600x300&markers=color:black|size:mid|label:T|icon:http://holyshared.github.com/StaticMaps/images/img_marker1.png|shadow:true|Williamsburg%2CBrooklyn%2CNY&sensor=false';
+	var testURL = 'http://maps.google.com/maps/api/staticmap?size=600x300&sensor=false&markers=color:black|size:mid|label:T|icon:http://holyshared.github.com/StaticMaps/images/img_marker1.png|shadow:true|Williamsburg%2CBrooklyn%2CNY&sensor=false';
 	var url = map.toQueryString();
 
 	(url == testURL) ? console.log('toQueryString success') : console.log('toQueryString failure');

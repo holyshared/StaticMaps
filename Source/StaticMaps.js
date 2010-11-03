@@ -21,6 +21,7 @@ requires:
   - Core/Class
   - Core/Class.Extras
   - Core/Element
+  - StaticMaps.Map
 
 provides: [StaticMaps, StaticMaps.Hooks, StaticMaps.Validater]
 ...
@@ -38,11 +39,8 @@ var StaticMaps = this.StaticMaps = new Class({
 
 	_url: 'http://maps.google.com/maps/api/staticmap',
 
-	_sensor: false,
-
 	initialize: function(options){
 		this.setOptions(options);
-		this.validater = new StaticMaps.Validater(); 
 		this._setDefaultValues();
 	},
 
@@ -53,8 +51,7 @@ var StaticMaps = this.StaticMaps = new Class({
 
 		var vn = this._validaters[ns][key];
 		vn = vn.capitalize();
-
-		if (this.validater['isValid' + vn](value)) {
+		if (StaticMaps.Validater['isValid' + vn](value)) {
 			this[ns][key] = value;
 		}
 	},
@@ -64,17 +61,6 @@ var StaticMaps = this.StaticMaps = new Class({
 		var ns = property.shift();
 		var key = property.shift();
 		return this[ns][key];
-	},
-
-	setSensor: function(value) {
-		if (!Type.isBoolean(value)) {
-			throw new TypeError('The data type is not boolean');
-		}
-		this._sensor = value;
-	},
-
-	getSensor: function() {
-		return this._sensor;
 	},
 
 	_getImage: function(){
@@ -118,7 +104,6 @@ var StaticMaps = this.StaticMaps = new Class({
 			}
 		}
 		var url = this._url + '?' + query.join('&');
-		url = url + '&sensor=' + this.getSensor();
 		return url;
 	},
 
@@ -131,6 +116,48 @@ var StaticMaps = this.StaticMaps = new Class({
 	}
 
 });
+
+
+
+
+
+StaticMaps.Point = new Class({
+
+	_point: null,
+
+	initialize: function(value){
+		this.setValue(value || null);
+	},
+
+	setValue: function(value){
+		if (!StaticMaps.Validater['isValidPoint'](value)) return;
+		this._point = value;
+	},
+
+	getValue: function(){
+		return this._point;
+	},
+
+	toString: function(){
+		var serialize = null;
+		switch(typeOf(this._point)) {
+			case 'object':
+				serialize = this._point.lat + ',' + this._point.lng;
+				break;
+			case 'string':
+				serialize = encodeURIComponent(this._point);
+				break;
+			default:
+				serialize = null;
+		}
+		return serialize;
+	}
+
+});
+
+StaticMaps.Point.factory = function(value) {
+	return new StaticMaps.Point(value);
+};
 
 StaticMaps.Hooks = {
 
@@ -157,7 +184,7 @@ StaticMaps.Hooks = {
 
 };
 
-StaticMaps.Validater = new Class({
+StaticMaps.Validater = {
 
 	_markerSizes: ['tiny', 'mid', 'small'],
 
@@ -261,13 +288,11 @@ StaticMaps.Validater = new Class({
 		if (!Type.isNumber(value)) return false;
 		if (value < 0 || value > 21) return false;
 		return true;
-	}
+	},
 
-});
+	isValidBoolean: Type.isBoolean,
+	isValidNumber: Type.isNumber
 
-StaticMaps.Validater.implement({
-	isValidBoolean: Type.isBoolean
-});
-
+};
 
 }(document.id));
