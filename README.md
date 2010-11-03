@@ -16,7 +16,6 @@ Mootools and the StaticMaps library are described in HTML in the head element.
 	<head>
 		<script type="text/javascript" src="mootools-core1.3.js"></script>
 		<script type="text/javascript" src="StaticMaps.js"></script>
-		<script type="text/javascript" src="StaticMaps.Map.js"></script>
 		<script type="text/javascript" src="StaticMaps.Position.js"></script>
 		<script type="text/javascript" src="StaticMaps.Marker.js"></script>
 		<script type="text/javascript" src="StaticMaps.Path.js"></script>

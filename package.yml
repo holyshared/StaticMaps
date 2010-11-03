@@ -15,7 +15,6 @@ copyright: "&copy; [Noritaka Horio](http://sharedhat.com)"
 sources:
   - "Source/StaticMaps.js"
   - "Source/StaticMaps.Position.js"
-  - "Source/StaticMaps.Map.js"
   - "Source/StaticMaps.Marker.js"
   - "Source/StaticMaps.Path.js"
 
