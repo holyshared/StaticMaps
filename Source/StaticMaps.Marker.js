@@ -48,8 +48,24 @@ StaticMaps.implement({
 		return marker;
 	},
 
+	addMarkers: function(markers){
+		var addMarkers = [], newMarker = null;
+		for (var i = 0; i < markers.length; i++){
+			newMarker = this.addMarker(markers[i]);
+			if (!newMarker) continue;
+			addMarkers.push(newMarker);
+		}
+		return addMarkers;
+	},
+
 	removeMarker: function(marker){
 		this._markers.erase(marker);
+	},
+
+	removeMarkers: function(markers){
+		for (var i = 0; i < this._markers.length; i++){
+			this.removeMarker(markers[i]);
+		}
 	}
 
 });
@@ -120,13 +136,6 @@ StaticMaps.Marker = new Class({
 			switch(key) {
 				case '_point':
 					query.push(value.toString());
-/*
-					if (Type.isString(value)) {
-						query.push(encodeURIComponent(value));
-					} else {
-						query.push(value.lat + ',' + value.lng);
-					}
-*/
 					break;
 				default:
 					query.push(key.replace('_', '') + ':' + value);

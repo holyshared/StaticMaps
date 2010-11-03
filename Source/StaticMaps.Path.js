@@ -2,7 +2,7 @@
 ---
 name: StaticMaps.Path
 
-description:
+description: The function to draw to StaticMaps in passing is added.
 
 license: MIT-style
 
@@ -71,14 +71,13 @@ StaticMaps.implement({
 	},
 
 	addPathPoints: function(points){
-		var points = [];
-		var points = this._get('_path.points');
+		var addPoints = [], newPoint = null;
 		for (var i = 0; i < points.length; i++){
-			var newPoint = this.addPathPoint(points[i]);
+			newPoint = this.addPathPoint(points[i]);
 			if (!newPoint) continue;
-			points.push(newPoint);
+			addPoints.push(newPoint);
 		}
-		return points;
+		return addPoints;
 	},
 
 	removePathPoint: function(point){
@@ -127,10 +126,10 @@ StaticMaps.Path.setDefaults = function(path) {
 			method = key.capitalize();
 			switch(key) {
 				case 'points':
-					this['addPath' + method](value);
+					this.addPathPoints(value);
 					break;
 				default:
-				this['setPath' + method](value);
+					this['setPath' + method](value);
 			}
 		}
 	}

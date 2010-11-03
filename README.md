@@ -16,9 +16,10 @@ Mootools and the StaticMaps library are described in HTML in the head element.
 	<head>
 		<script type="text/javascript" src="mootools-core1.3.js"></script>
 		<script type="text/javascript" src="StaticMaps.js"></script>
-		<script type="text/javascript" src="StaticMaps.Position.js"></script>
 		<script type="text/javascript" src="StaticMaps.Map.js"></script>
+		<script type="text/javascript" src="StaticMaps.Position.js"></script>
 		<script type="text/javascript" src="StaticMaps.Marker.js"></script>
+		<script type="text/javascript" src="StaticMaps.Path.js"></script>
 	</head>
 
 ### Preparation for container element that draws in map
@@ -45,7 +46,7 @@ It draws in the map in the element that specifies the parameter necessary for th
 					height: 300
 				},
 				format: 'jpg',
-				maptype: 'roadmap',
+				mapType: 'roadmap',
 				mobile: true,
 				language: 'en'
 			},
@@ -62,7 +63,14 @@ It draws in the map in the element that specifies the parameter necessary for th
 					label: 'B',
 					point: {lat: 40.714353, lng: -74.005973}
 				}
-			]
+			],
+			path: {
+				color: '0xFF0000',
+				points: [
+					'New York',
+					{ lat: 40.714353, lng: -74.005973 }
+				]
+			}
 		});
 		map.renderTo($('staticMap'));
 	});
@@ -122,7 +130,7 @@ Moreover, it is also possible to specify it individually by using the method of 
 * **map**: (object) - The map is optional.
 	* **size**: (object) - Key pair object of width and height.
 	* **format**: (string) - Image format in map.  Jpg, png, and gif, etc. can be specified. 
-	* **maptype**: (string) - Kind of map. Either roadmap, satellite, terrain or hybrid can be specified. 
+	* **mapType**: (string) - Kind of map. Either roadmap, satellite, terrain or hybrid can be specified. 
 	* **mobile**: (boolean) - It displays it by mobile correspondence.
 	* **language**: (string) - Locale in map. en and ja, etc.
 
@@ -136,3 +144,11 @@ Moreover, it is also possible to specify it individually by using the method of 
 		* **point**: (object|string) - Coordinates position of marker. Coordinates or the address can be specified. 
 		* **icon**: (string) - URL of custom marker.
 		* **shadow**: (boolean) - The shadow of the marker is displayed.
+
+##### Path
+
+* **path**: (object) - Information on passing.
+	* **weigth**: (number) - Thickness of line.
+	* **color**: (string) - Color of line.
+	* **fillColor**: (string) - Color that paints out passing.
+	* **points**: (array) - One or more coordinates or name of a places of passing and addresses.

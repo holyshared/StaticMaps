@@ -48,7 +48,9 @@ It is possible to use it by adding *StaticMaps.Marker*.
 ##### StaticMaps.Marker
 
 * addMarker 
+* addMarkers
 * removeMarker 
+* removeMarkers
 
 #### Function concerning path.
 
@@ -67,19 +69,11 @@ It is possible to use it by adding *StaticMaps.Marker*.
 * removePathPoint
 * removePathPoints
 
-### StaticMaps.Hooks
+### StaticMaps.Point
 
-* getQueries
-* registerDefaults
-* registerQuery
-
-### StaticMaps.Position
-
-* toQueryString
-
-### StaticMaps.Map
-
-* toQueryString
+* setValue
+* getValue
+* toString
 
 ### StaticMaps.Marker
 

@@ -23,7 +23,7 @@ requires:
   - Core/Element
   - StaticMaps.Map
 
-provides: [StaticMaps, StaticMaps.Hooks, StaticMaps.Validater]
+provides: [StaticMaps, StaticMaps.Hooks, StaticMaps.Validater, StaticMaps.Point]
 ...
 */
 
