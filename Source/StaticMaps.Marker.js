@@ -45,16 +45,11 @@ StaticMaps.implement({
 			marker = new StaticMaps.Marker(marker);
 		}
 		this._markers.push(marker);
+		return marker;
 	},
 
-	removeMarker: function(value){
-		var target = value;
-		if (Type.isNumber(value)) {
-			if (this._markers[value]) {
-				target = this._markers[value]; 
-			}
-		}
-		this._markers.erase(target);
+	removeMarker: function(marker){
+		this._markers.erase(marker);
 	}
 
 });
@@ -106,6 +101,14 @@ StaticMaps.Marker = new Class({
 		return props;
 	},
 
+	setPoint: function(point){
+		if (!instanceOf(point, StaticMaps.Point)) {
+			point = new StaticMaps.Point(point);
+		}
+		this._set('_point', point);
+		return this;
+	},
+
 	toQueryString: function() {
 		var query = [], key = null, value = null;
 		var orderKeys = StaticMaps.Marker.orderKeys;
@@ -116,11 +119,14 @@ StaticMaps.Marker = new Class({
 			if (value == null && value == undefined) continue;
 			switch(key) {
 				case '_point':
+					query.push(value.toString());
+/*
 					if (Type.isString(value)) {
 						query.push(encodeURIComponent(value));
 					} else {
 						query.push(value.lat + ',' + value.lng);
 					}
+*/
 					break;
 				default:
 					query.push(key.replace('_', '') + ':' + value);
@@ -134,23 +140,22 @@ StaticMaps.Marker = new Class({
 
 var methods = {};
 ['_color', '_size', '_label', '_icon', '_shadow', '_point'].each(function(name){
-
-	var propertyName = name;
-	var setterName = 'set' + name.replace('_', '').capitalize();
 	var getterName = 'get' + name.replace('_', '').capitalize();
-
 	methods[getterName] = function() {
-		var value = this._get(propertyName);
+		var value = this._get(name);
 		return value;
 	};
+});
 
+['_color', '_size', '_label', '_icon', '_shadow'].each(function(name){
+	var setterName = 'set' + name.replace('_', '').capitalize();
 	methods[setterName] = function() {
-		var args = [propertyName].append(Array.from(arguments));
+		var args = [name].append(Array.from(arguments));
 		this._set.apply(this, args);
 		return this;
 	};
-
 });
+
 
 StaticMaps.Marker.validaters = {
 	_color: 'color',

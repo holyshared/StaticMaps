@@ -7,24 +7,23 @@
 	    function(){
 			map.setCenter('japan');
 			var center = map.getCenter();
-			return (center == 'japan');
+			return (center.getValue() == 'japan');
 	    },
 	    function(){
 			map.setCenter({lat: 'foo', lng: 'bar'});
 			var center = map.getCenter();
-			return (center.lat != 'foo' && center.lng != 'bar');
+			return (center.getValue() == null);
 	    },
 	    function(){
 			map.setCenter({lat: 40.711614, lng: -74.012318});
 			var center = map.getCenter();
-			return (center.lat == 40.711614 && center.lng == -74.012318);
+			return (center.toString() == '40.711614,-74.012318');
 	    }
 	]);
 	var center = centerTest.some(function(tester, index){
 		return (tester() == false);
 	});
 	(center) ? console.log('center getter/setter failure') : console.log('center getter/setter success');
-
 
 
 	var zoomTest = [];
@@ -55,8 +54,7 @@
 	});
 	(zoom) ? console.log('zoom getter/setter failure') : console.log('zoom getter/setter success');
 
-
-	var testURL = 'http://maps.google.com/maps/api/staticmap?center=40.711614,-74.012318&zoom=15&sensor=false';
+	var testURL = 'http://maps.google.com/maps/api/staticmap?size=600x600&sensor=false&center=40.711614,-74.012318&zoom=15';
 	(testURL == map.toQueryString()) ? console.log('toQueryString success') : console.log('toQueryString failure');
 
 }(document.id));

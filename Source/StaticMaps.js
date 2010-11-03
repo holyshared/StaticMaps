@@ -51,6 +51,7 @@ var StaticMaps = this.StaticMaps = new Class({
 
 		var vn = this._validaters[ns][key];
 		vn = vn.capitalize();
+
 		if (StaticMaps.Validater['isValid' + vn](value)) {
 			this[ns][key] = value;
 		}
@@ -257,21 +258,23 @@ StaticMaps.Validater = {
 	},
 
 	isValidPoint: function(value){
-		switch(typeOf(value)) {
-			case 'object':
-				if (!Type.isNumber(value.lat)
-				|| !Type.isNumber(value.lng)) {
+		if (!instanceOf(value, StaticMaps.Point)) {
+			switch (typeOf(value)) {
+				case 'object':
+					if (!Type.isNumber(value.lat) ||
+					!Type.isNumber(value.lng)) {
+						return false;
+					}
+					break;
+				case 'string':
+					if (value.length <= 0) {
+						return false;
+					}
+					break;
+				default:
 					return false;
-				}
-				break;
-			case 'string':
-				if (value.length <= 0) {
-					return false;
-				}
-				break;
-			default:
-				return false;
-				break;
+					break;
+			}
 		}
 		return true;
 	},

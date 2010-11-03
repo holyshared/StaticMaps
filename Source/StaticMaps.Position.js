@@ -50,6 +50,14 @@ StaticMaps.implement({
 			center: 'point',
 			zoom: 'zoom'
 		}
+	},
+
+	setCenter: function(point){
+		if (!instanceOf(point, StaticMaps.Point)) {
+			point = new StaticMaps.Point(point);
+		}
+		this._set('_position.center', point);
+		return this;
 	}
 
 });
@@ -58,21 +66,21 @@ var options = {};
 ['center', 'zoom'].each(function(name){
 	var propertyName = '_position.' + name;
 	var getterName = 'get' + name.capitalize();
-	var setterName = 'set' + name.capitalize();
-
 	options[getterName] = function() {
 		var value = this._get(propertyName);
 		return value;
 	};
+});
 
+['zoom'].each(function(name){
+	var propertyName = '_position.' + name;
+	var setterName = 'set' + name.capitalize();
 	options[setterName] = function() {
 		var args = [propertyName].append(Array.from(arguments));
 		this._set.apply(this, args);
 		return this;
 	};
-
 });
-
 StaticMaps.implement(options);
 
 StaticMaps.Position = {};
@@ -94,7 +102,7 @@ StaticMaps.Position.setDefaults = function(props) {
 StaticMaps.Position.toQueryString = function(position) {
 	var query = [];
 	var center = position.center;
-	if (center) {
+/*	if (center) {
 		switch(typeOf(center)) {
 			case 'string':
 				query.push('center=' + encodeURIComponent(center));
@@ -103,8 +111,12 @@ StaticMaps.Position.toQueryString = function(position) {
 				query.push('center=' + center.lat + ',' + center.lng);
 				break;
 		}
+	}*/
+	if (center) {
+		if (center.getValue() !== null) {
+			query.push('center=' + center.toString());
+		}
 	}
-
 	if (position.zoom) {
 		query.push('zoom=' + position.zoom);
 	}

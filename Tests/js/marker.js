@@ -93,17 +93,17 @@
 	    function(){
 			marker.setPoint({ lat: 'aaa' });
 			var point = marker.getPoint();
-			return (point.lat != 'aaa');
+			return (point.getValue() == null);
 	    },
 	    function(){
 			marker.setPoint('New York');
 			var point = marker.getPoint();
-			return (point == 'New York');
+			return (point.getValue() == 'New York');
 	    },
 	    function(){
 			marker.setPoint({ lat: 40, lng: 138 });
 			var point = marker.getPoint();
-			return (point.lat == 40 && point.lng == 138);
+			return (point.toString() == '40,138');
 	    }
 	]);
 	var point = pointTest.some(function(tester, index){
@@ -172,8 +172,7 @@
 
 	//QueryString
 	map.addMarker(marker);
-
-	var testURL = 'http://maps.google.com/maps/api/staticmap?size=600x300&sensor=false&markers=color:black|size:mid|label:T|icon:http://holyshared.github.com/StaticMaps/images/img_marker1.png|shadow:true|Williamsburg%2CBrooklyn%2CNY&sensor=false';
+	var testURL = 'http://maps.google.com/maps/api/staticmap?size=600x300&sensor=false&markers=color:black|size:mid|label:T|icon:http://holyshared.github.com/StaticMaps/images/img_marker1.png|shadow:true|Williamsburg%2CBrooklyn%2CNY';
 	var url = map.toQueryString();
 
 	(url == testURL) ? console.log('toQueryString success') : console.log('toQueryString failure');
