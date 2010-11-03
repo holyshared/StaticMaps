@@ -32,7 +32,7 @@ provides: [StaticMaps.Map]
 
 var StaticMaps = (this.StaticMaps || {});
 
-var options = {
+StaticMaps.implement({
 
 	options: {
 		map: {
@@ -71,8 +71,9 @@ var options = {
 		return this;
 	}
 
-};
+});
 
+var options = {};
 ['size', 'format', 'mapType', 'mobile', 'language'].each(function(name){
 	var propertyName = '_map.' + name;
 	var getterName = 'get' + name.capitalize();

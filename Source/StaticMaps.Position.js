@@ -31,8 +31,7 @@ provides: [StaticMaps.Position]
 (function($){
 
 var StaticMaps = (this.StaticMaps || {});
-
-var options = {
+StaticMaps.implement({
 
 	options: {
 		position: {
@@ -53,8 +52,9 @@ var options = {
 		}
 	}
 
-};
+});
 
+var options = {};
 ['center', 'zoom'].each(function(name){
 	var propertyName = '_position.' + name;
 	var getterName = 'get' + name.capitalize();
