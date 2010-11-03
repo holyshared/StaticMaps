@@ -72,36 +72,8 @@ var options = {
 	};
 
 });
-/*
-['center', 'zoom'].each(function(name){
-	var propertyName = '_position.' + name;
-	var setterName = 'set' + name.capitalize();
-	options[setterName] = function() {
-		var args = [propertyName].append(Array.from(arguments));
-		this._set.apply(this, args);
-		return this;
-	};
-});
-*/
-
-
-
-
 
 StaticMaps.implement(options);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 StaticMaps.Position = {};
 

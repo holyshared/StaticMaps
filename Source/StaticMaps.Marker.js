@@ -70,7 +70,19 @@ StaticMaps.Marker = new Class({
 
 	initialize: function(props){
 		var properties = props = (props || {});
+		this.validater = new StaticMaps.Validater();
 		this.setProperties(properties);
+	},
+
+	_set: function(key, value){
+		var vn = StaticMaps.Marker.validaters[key];
+		if (this.validater['isValid' + vn.capitalize()](value)) {
+			this[key] = value;
+		}
+	},
+
+	_get: function(key){
+		return this[key];
 	},
 
 	setProperties: function(props) {
@@ -79,57 +91,10 @@ StaticMaps.Marker = new Class({
 			if (props.hasOwnProperty(key)) {
 				method = key.capitalize();
 				value = props[key];
+
 				this["set" + method](value);
 			}
 		}
-	},
-
-	setColor: function(color) {
-		if (!this._isValidColor(color)) {
-			throw new Error('They are not curlers such as 24 bit color or black, brown, and green');
-		}
-		this._color = color;
-		return this;
-	},
-
-	setLabel: function(label) {
-		if (!this._isValidLabel(label)) {
-			throw new Error('It is not one character in the set of {A-Z, 0-9}');
-		}
-		this._label = label;
-		return this;
-	},
-
-	setSize: function(size) {
-		if (!this._isValidMarkerSize(size)) {
-			throw new Error('The sizes are not either tiny, mid or small');
-		}
-		this._size = size;
-		return this;
-	},
-
-	setPoint: function(point) {
-		if (!this._isValidPoint(point)) {
-			throw new Error('The coordinates position is invalid');
-		}
-		this._point = point;
-		return this;
-	},
-
-	setIcon: function(url) {
-		if (!this._isValidIcon(url)) {
-			throw new Error('It is invalid icon URL');
-		}
-		this._icon = url;
-		return this;
-	},
-
-	setShadow: function(value) {
-		if (!Type.isBoolean(value)) {
-			throw new TypeError('The data type is not boolean');
-		}
-		this._shadow = value;
-		return this;
 	},
 
 	getProperties: function() {
@@ -142,42 +107,6 @@ StaticMaps.Marker = new Class({
 		return props;
 	},
 
-	getColor: function() {
-		return this._color;
-	},
-
-	getLabel: function() {
-		return this._label;
-	},
-
-	getSize: function() {
-		return this._size;
-	},
-
-	getPoint: function() {
-		return this._point;
-	},
-
-	getIcon: function() {
-		return this._icon;
-	},
-
-	getShadow: function() {
-		return this._shadow;
-	},
-/*
-	toObject: function() {
-		var object = {};
-		for (var key in this.props) {
-			if (this.props.hasOwnProperty(key)) {
-				value = this.props[key];
-				if (value == null && value == undefined) continue;
-				object[key] = value;
-			}
-		}
-		return object;
-	},
-*/
 	toQueryString: function() {
 		var query = [];
 		var orderKeys = StaticMaps.Marker.orderKeys;
@@ -204,7 +133,36 @@ StaticMaps.Marker = new Class({
 
 });
 
-StaticMaps.Marker.implement(new StaticMaps.Validater());
+var methods = {};
+['_color', '_size', '_label', '_icon', '_shadow', '_point'].each(function(name){
+
+	var propertyName = name;
+	var setterName = 'set' + name.replace('_', '').capitalize();
+	var getterName = 'get' + name.replace('_', '').capitalize();
+
+	methods[getterName] = function() {
+		var value = this._get(propertyName);
+		return value;
+	};
+
+	methods[setterName] = function() {
+		var args = [propertyName].append(Array.from(arguments));
+		this._set.apply(this, args);
+		return this;
+	};
+
+});
+
+StaticMaps.Marker.validaters = {
+	_color: 'color',
+	_size: 'markerSize',
+	_label: 'label',
+	_icon: 'icon',
+	_shadow: 'boolean',
+	_point: 'point'
+};
+
+StaticMaps.Marker.implement(methods);
 
 StaticMaps.Marker.orderKeys = ['_color', '_size', '_label', '_icon', '_shadow', '_point'];
 

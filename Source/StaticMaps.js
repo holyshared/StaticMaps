@@ -22,7 +22,7 @@ requires:
   - Core/Class.Extras
   - Core/Element
 
-provides: [StaticMaps, StaticMaps.Hooks]
+provides: [StaticMaps, StaticMaps.Hooks, StaticMaps.Validater]
 ...
 */
 
@@ -156,6 +156,118 @@ StaticMaps.Hooks = {
 	}
 
 };
+
+StaticMaps.Validater = new Class({
+
+	_markerSizes: ['tiny', 'mid', 'small'],
+
+	_formats: ['png', 'png8', 'png32', 'gif', 'jpg', 'jpg-baseline'],
+
+	_mapTypes: ['roadmap', 'satellite', 'terrain', 'hybrid'],
+
+	_languages: [
+		'aa', 'ab', 'af', 'am', 'ar','as','ay','az','ba','be','bg','bh','bi','bn','bo','br','ca','co','cs','cy','da',
+		'de','dz','el','en','eo','es','et','eu','fa','fi','fj','fo','fr','fy','ga','gd','gl','gn','gu','ha','hi','hr',
+		'hu','hy','ia','ie','ik','in','is','it','iw','ja','ji','jw','ka','kk','kl','km','kn','ko','ks','ku','ky','la',
+		'ln','lo','lt','lv','mg','mi','mk','ml','mn','mo','mr','ms','mt','my','na','ne','nl','no','oc','om','or','pa',
+		'pl','ps','pt','qu','rm','rn','ro','ru','rw','sa','sd','sg','sh','si','sk','sl','sm','sn','so','sq','sr','ss',
+		'st','su','sv','sw','ta','te','tg','th','ti','tk','tl','tn','to','tr','ts','tt','tw','uk','ur','uz','vi','vo',
+		'wo','xh','yo','zh','zu'
+	],
+
+	_colors: ['black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white'],
+
+	isValidMapSize: function(size){
+		if (!Type.isObject(size)) return false;
+		if (!(Type.isNumber(size.width) && Type.isNumber(size.height))
+			|| (size.width <= 0 || size.height <= 0)) {
+			return false;
+		}
+		return true;
+	},
+
+	isValidMarkerSize: function(value){
+		if (this._markerSizes.indexOf(value) <= -1 ) {
+			return false;
+		}
+		return true;
+	},
+
+	isValidLabel: function(label){
+		if (!Type.isString(label) || !label.test(/^[A-Z0-9]{1}$/)) {
+			return false;
+		}
+		return true;
+	},
+
+	isValidFormat: function(value){
+		if (this._formats.indexOf(value) <= -1 ) {
+			return false;
+		}
+		return true;
+	},
+
+	isValidMapType: function(value){
+		if (this._mapTypes.indexOf(value) <= -1 ) {
+			return false;
+		}
+		return true;
+	},
+
+	isValidLanguage: function(value){
+		if (this._languages.indexOf(value) <= -1 ) {
+			return false;
+		}
+		return true;
+	},
+
+	isValidColor: function(value){
+		if (!Type.isString(value)) return false;
+		if (!value.test(/^0x[A-Z0-9]{6}$/) && this._colors.indexOf(value) <= -1) {
+			return false;
+		}
+		return true;
+	},
+
+	isValidPoint: function(value){
+		switch(typeOf(value)) {
+			case 'object':
+				if (!Type.isNumber(value.lat)
+				|| !Type.isNumber(value.lng)) {
+					return false;
+				}
+				break;
+			case 'string':
+				if (value.length <= 0) {
+					return false;
+				}
+				break;
+			default:
+				return false;
+				break;
+		}
+		return true;
+	},
+
+	isValidIcon: function(url){
+		if (!Type.isString(url)) return false;
+		if (!url.test(/^(((ht|f)tp(s?))\:\/\/)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/)) {
+			return false;
+		}
+		return true;
+	},
+
+	isValidZoom: function(value){
+		if (!Type.isNumber(value)) return false;
+		if (value < 0 || value > 21) return false;
+		return true;
+	}
+
+});
+
+StaticMaps.Validater.implement({
+	isValidBoolean: Type.isBoolean
+});
 
 
 }(document.id));
