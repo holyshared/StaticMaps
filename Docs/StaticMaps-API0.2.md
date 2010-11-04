@@ -1,4 +1,4 @@
-StaticMaps
+StaticMaps 0.2
 ============
 
 StaticMaps API Document
@@ -6,7 +6,17 @@ StaticMaps API Document
 
 ### StaticMaps
 
+* setSize
+* setFormat
+* setMapType
+* setMobile
+* setLanguage
 * setSensor
+* getSize
+* getFormat
+* getMapType
+* getMobile
+* getLanguage
 * getSensor
 * renderTo
 * toQueryString
@@ -22,24 +32,6 @@ It is possible to use it by adding *StaticMaps.Position*.
 * setZoomt
 * getCenter
 * getZoom
-
-#### Function concerning map.
- 
-It is possible to use it by adding *StaticMaps.Map*.
-
-##### StaticMaps.Map
-
-* setSize
-* setFormat
-* setMapType
-* setMobile
-* setLanguage
-* getSize
-* getFormat
-* getMapType
-* getMobile
-* getLanguage
-
 
 #### Function concerning marker.
  

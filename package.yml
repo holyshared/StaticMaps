@@ -1,17 +1,29 @@
 name: "StaticMaps"
-exports: "staticmaps.js"
+
+exports: "staticmaps-0.2.js"
+
 web: "[http://sharedhat.com](http://sharedhat.com)"
+
 description: "It draws in a static map with Static Maps API V2. The acquisition of URL is also possible."
+
 authors: "[Noritaka Horio](http://sharedhat.com)"
+
 license: "[MIT License](http://sharedhat.com/mit-license.txt)"
+
 copyright: "&copy; [Noritaka Horio](http://sharedhat.com)"
+
 sources:
   - "Source/StaticMaps.js"
   - "Source/StaticMaps.Position.js"
   - "Source/StaticMaps.Marker.js"
   - "Source/StaticMaps.Path.js"
+
 author: holyshared
+
 category: Media
+
 tags: [map, google, static, version2, static maps]
+
 demo: http://holyshared.github.com/StaticMaps/
+
 current: 0.2
